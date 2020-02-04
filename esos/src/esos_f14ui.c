@@ -8,6 +8,9 @@
 # include <esos_f14ui.h>
 # include <revF14.h>
 
+#define DOUBLE_PRESS_LOWER_BOUND_MS 120
+#define DOUBLE_PRESS_UPPER_BOUND_MS 300
+
 // PRIVATE FUNCTIONS
 inline void _esos_uiF14_setRPGCounter (uint16_t newValue) {
     _st_esos_uiF14Data.u16_RPGCounter = newValue;
@@ -251,20 +254,30 @@ ESOS_USER_TASK( __esos_uiF14_task ){
   
   ESOS_TASK_BEGIN();
   while(TRUE) {
+    // Switch 1 
     _st_esos_uiF14Data.b_SW1Pressed = SW1_PRESSED;
-    //_st_esos_uiF14Data.b_SW1DoublePressed;
+    _st_esos_uiF14Data.b_SW1DoublePressed;
+
+    // Switch 2 
     _st_esos_uiF14Data.b_SW2Pressed = SW2_PRESSED;
-    //_st_esos_uiF14Data.b_SW1DoublePressed;    
+    //_st_esos_uiF14Data.b_SW2DoublePressed;    
+
+    // Switch 3 
     _st_esos_uiF14Data.b_SW3Pressed = SW3_PRESSED;
-    //_st_esos_uiF14Data.b_SW1DoublePressed;    
+    //_st_esos_uiF14Data.b_SW3DoublePressed;    
     
     //_st_esos_uiF14Data.b_RPGAHigh;
     //_st_esos_uiF14Data.b_RPGBHigh;
     
+    // LED1 (Red) 
     LED1 = _st_esos_uiF14Data.b_LED1On;
     //_st_esos_uiF14Data.u16_LED1FlashPeriod;    
+
+    // LED2 (Yellow) 
     LED2 = _st_esos_uiF14Data.b_LED2On;
-    //_st_esos_uiF14Data.u16_LED2FlashPeriod;        
+    //_st_esos_uiF14Data.u16_LED2FlashPeriod;    
+
+    // LED3 (Green)    
     LED3 = _st_esos_uiF14Data.b_LED3On;
     //_st_esos_uiF14Data.u16_LED3FlashPeriod;        
     
