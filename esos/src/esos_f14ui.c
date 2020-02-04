@@ -29,7 +29,12 @@ inline BOOL esos_uiF14_isSW1Released (void) {
 }
 
 inline BOOL esos_uiF14_isSW1DoublePressed (void) {
-    return (_st_esos_uiF14Data.b_SW1DoublePressed==TRUE);
+    if (_st_esos_uiF14Data.b_SW1DoublePressed==TRUE) {
+        _st_esos_uiF14Data.b_SW1DoublePressed = FALSE;
+        return TRUE;
+    } else {
+        return FALSE;
+    }
 }
 
 inline BOOL esos_uiF14_isSW2Pressed (void) {
@@ -41,7 +46,12 @@ inline BOOL esos_uiF14_isSW2Released (void) {
 }
 
 inline BOOL esos_uiF14_isSW2DoublePressed (void) {
-    return (_st_esos_uiF14Data.b_SW2DoublePressed==TRUE);
+    if (_st_esos_uiF14Data.b_SW2DoublePressed==TRUE) {
+        _st_esos_uiF14Data.b_SW2DoublePressed = FALSE;
+        return TRUE;
+    } else {
+        return FALSE;
+    }
 }
 
 inline BOOL esos_uiF14_isSW3Pressed (void) {
@@ -53,7 +63,12 @@ inline BOOL esos_uiF14_isSW3Released (void) {
 }
 
 inline BOOL esos_uiF14_isSW3DoublePressed (void) {
-    return (_st_esos_uiF14Data.b_SW3DoublePressed==TRUE);
+    if (_st_esos_uiF14Data.b_SW3DoublePressed==TRUE) {
+        _st_esos_uiF14Data.b_SW3DoublePressed = FALSE;
+        return TRUE;
+    } else {
+        return FALSE;
+    }
 }
 
 
