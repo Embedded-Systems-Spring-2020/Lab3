@@ -20,39 +20,39 @@ inline void _esos_uiF14_setLastRPGCounter (uint16_t newValue) {
 }
 
 // PUBLIC SWITCH FUNCTIONS
-inline BOOL esos_uiF14_getSW1Pressed (void) {
+inline BOOL esos_uiF14_isSW1Pressed (void) {
     return (_st_esos_uiF14Data.b_SW1Pressed==TRUE);
 }
 
-inline BOOL esos_uiF14_getSW1Released (void) {
+inline BOOL esos_uiF14_isSW1Released (void) {
     return (_st_esos_uiF14Data.b_SW1Pressed==FALSE);
 }
 
-inline BOOL esos_uiF14_getSW1DoublePressed (void) {
+inline BOOL esos_uiF14_isSW1DoublePressed (void) {
     return (_st_esos_uiF14Data.b_SW1DoublePressed==TRUE);
 }
 
-inline BOOL esos_uiF14_getSW2Pressed (void) {
+inline BOOL esos_uiF14_isSW2Pressed (void) {
     return (_st_esos_uiF14Data.b_SW2Pressed==TRUE);
 }
 
-inline BOOL esos_uiF14_getSW2Released (void) {
+inline BOOL esos_uiF14_isSW2Released (void) {
     return (_st_esos_uiF14Data.b_SW2Pressed==FALSE);
 }
 
-inline BOOL esos_uiF14_getSW2DoublePressed (void) {
+inline BOOL esos_uiF14_isSW2DoublePressed (void) {
     return (_st_esos_uiF14Data.b_SW2DoublePressed==TRUE);
 }
 
-inline BOOL esos_uiF14_getSW3Pressed (void) {
+inline BOOL esos_uiF14_isSW3Pressed (void) {
     return (_st_esos_uiF14Data.b_SW3Pressed==TRUE);
 }
 
-inline BOOL esos_uiF14_getSW3Released (void) {
+inline BOOL esos_uiF14_isSW3Released (void) {
     return (_st_esos_uiF14Data.b_SW3Pressed==FALSE);
 }
 
-inline BOOL esos_uiF14_getSW3DoublePressed (void) {
+inline BOOL esos_uiF14_isSW3DoublePressed (void) {
     return (_st_esos_uiF14Data.b_SW3DoublePressed==TRUE);
 }
 
