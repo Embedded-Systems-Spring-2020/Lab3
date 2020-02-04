@@ -251,7 +251,27 @@ ESOS_USER_TASK( __esos_uiF14_task ){
   
   ESOS_TASK_BEGIN();
   while(TRUE) {
-    // do your UI stuff here
+    _st_esos_uiF14Data.b_SW1Pressed = SW1_PRESSED;
+    //_st_esos_uiF14Data.b_SW1DoublePressed;
+    _st_esos_uiF14Data.b_SW2Pressed = SW2_PRESSED;
+    //_st_esos_uiF14Data.b_SW1DoublePressed;    
+    _st_esos_uiF14Data.b_SW3Pressed = SW3_PRESSED;
+    //_st_esos_uiF14Data.b_SW1DoublePressed;    
+    
+    //_st_esos_uiF14Data.b_RPGAHigh;
+    //_st_esos_uiF14Data.b_RPGBHigh;
+    
+    LED1 = _st_esos_uiF14Data.b_LED1On;
+    //_st_esos_uiF14Data.u16_LED1FlashPeriod;    
+    LED2 = _st_esos_uiF14Data.b_LED2On;
+    //_st_esos_uiF14Data.u16_LED2FlashPeriod;        
+    LED3 = _st_esos_uiF14Data.b_LED3On;
+    //_st_esos_uiF14Data.u16_LED3FlashPeriod;        
+    
+    //_st_esos_uiF14Data.u16_RPGCounter;
+    //_st_esos_uiF14Data.u16_lastRPGCounter;
+
+
     ESOS_TASK_WAIT_TICKS( __ESOS_UIF14_UI_PERIOD );
   }
   ESOS_TASK_END();
