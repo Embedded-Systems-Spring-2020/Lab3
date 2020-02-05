@@ -223,6 +223,8 @@ void config_esos_uiF14() {
   CONFIG_SW3();
 
   //Step 3: setup RPG
+  CONFIG_RPGA;
+  CONFIG_RPGB;
 
   //TODO
 
