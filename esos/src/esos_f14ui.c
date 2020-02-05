@@ -8,6 +8,8 @@
 # include <esos_f14ui.h>
 # include <revF14.h>
 
+#define DOUBLE_PRESS_TIMER_EXPIRED ESOS_USER_FLAG_1
+
 #define DOUBLE_PRESS_LOWER_BOUND_MS 120
 #define DOUBLE_PRESS_UPPER_BOUND_MS 300
 
@@ -248,26 +250,43 @@ void config_esos_uiF14() {
   esos_RegisterTask( __uiF14_task );
 }
 
-
-ESOS_USER_TIMER()
+ESOS_USER_TIMER(__double_press_timer) {
+	esos_SetUserFlag(DOUBLE_PRESS_TIMER_EXPIRED);
+}
 
 // UIF14 task to manage user-interface
 ESOS_USER_TASK( __esos_uiF14_task ){
   
   ESOS_TASK_BEGIN();
-  while(TRUE) {
- 
-    // idea:
-	// Press button once: clear SW1DoublePressed if it's already TRUE
-	// else, start a timer to enable set a user flag signaling that we should
-	// look out for another press after DOUBLE_PRESS_LOWER_BOUND_MS and a second timer
-	// to disable that flag after DOUBLE_PRESS_UPPER_BOUND_MS.
-	// During that period, check for a second press on every tickand set DoublePressed to TRUE
-	// if detected
-    
-	// Switch 1 
-	_st_esos_uiF14Data.b_SW1Pressed = SW1_PRESSED;
-	_st_esos_uiF14Data.b_SW1DoublePressed;
+  while(TRUE) {																	/* yeah im commenting past 80 chars 
+																					what are you gonna do about it
+	if (SW1_PRESSED) {																hopefully not dock points uhhh */
+		ESOS_TASK_WAIT_TICKS(DOUBLE_PRESS_LOWER_BOUND_MS);						// Wait a small amount of time
+		esos_RegisterTimer(__double_press_timer, DOUBLE_PRESS_UPPER_BOUND_MS);	// start timer
+		ESOS_TASK_WAIT_UNTIL(													
+			esos_IsUserFlagSet(DOUBLE_PRESS_TIMER_EXPIRED) || 					// Funky identation to keep code 
+			SW1_PRESSED															// under 80 chars but mostly readable
+		);				
+		if (!esos_IsUserFlagSet(DOUBLE_PRESS_TIMER_EXPIRED)) {					// If we branch here, the switch was not
+			_st_esos_uiF14Data.b_SW1DoublePressed = TRUE;						// pressed again in time; single press
+			_st_esos_uiF14Data.b_SW1Pressed = FALSE;
+		} else {
+			_st_esos_uiF14Data.b_SW1Pressed = TRUE;								// If we branch here, the switch must
+			_st_esos_uiF14Data.b_SW1DoublePressed = FALSE;						// have been pressed; double press
+			esos_ClearUserFlag(DOUBLE_PRESS_TIMER_EXPIRED);						// Reset the flag for next time
+		}
+		esos_UnregisterTimer(__double_press_timer);								// Disable the timer until we need it 
+	}																			//again
+
+	/* THOUGHTS ON THE SOLUTION ABOVE
+		Pros:
+			Dead simple
+			Easy to read
+			Maybe easy to maintain?? we will se
+		Cons:
+			MIGHT introduce latency to our main loop, which is bad (probably not
+				significant doe)
+	*/
 
 	// Switch 2 
 	_st_esos_uiF14Data.b_SW2Pressed = SW2_PRESSED;
