@@ -19,6 +19,7 @@ void user_init(){
 	esos_RegisterTask(drawDisplay);
 	
 	char ac_onAndOff["      "];
+	char ac_swMessage["Sw1 is On ", "Sw1 is Double Pressed ", "Sw2 is On ", "Sw2 is Double Pressed ", "Sw3 is On ", "Sw3 is Double Pressed "];
 	
 }
 
@@ -68,10 +69,20 @@ ESOS_USER_TASK(drawDisplay) {
 		if(esos_uiF14_isSW3DoublePressed()){
 			ac_onAndOff[5] = "X";
 		}
-		for(int i = 0; i < 60; i += 1 ){println("\b");}  //clear the screen with backspaces
-		println("Sw1 is On %c   Sw1 is Double Pressed %c\n", ac_onAndOff[0], ac_onAndOff[1]);
-		println("Sw2 is On %c   Sw2 is Double Pressed %c\n", ac_onAndOff[2], ac_onAndOff[3]);
-		println("Sw3 is On %c   Sw3 is Double Pressed %c\n", ac_onAndOff[4], ac_onAndOff[5]);
+		ESOS_TASK_WAIT_ON_AVAILABLE_OUT_COMM();
+		for(int i = 0; i < 60; i += 1 ){
+			ESOS_TASK_WAIT_ON_SEND_UINT8_AS_HEX_STRING(0X08); // BACKSPACES TO CLEAR SCREEN
+		}  //clear the screen with backspaces
+		//char ac_swMessage["Sw1 is On ", "Sw1 is Double Pressed ", "Sw2 is On ", "Sw2 is Double Pressed ", "Sw3 is On ", "Sw3 is Double Pressed "];
+		for(int i = 0; i < 3; i += 1 ){
+			ESOS_TASK_WAIT_ON_SEND_STRING(ac_swMessage[2*i]);
+			ESOS_TASK_WAIT_ON_SEND_UINT8_AS_HEX_STRING(ac_onAndOff[2*i]);
+			ESOS_TASK_WAIT_ON_SEND_STRING(ac_swMessage[2*i+1]);
+			ESOS_TASK_WAIT_ON_SEND_UINT8_AS_HEX_STRING(ac_onAndOff[2*i+1]);
+			ESOS_TASK_WAIT_ON_SEND_UINT8_AS_HEX_STRING(0X0A); //newline
+		}
+		
+		
 	ESOS_TASK_END();
 }
 
