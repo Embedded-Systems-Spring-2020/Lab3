@@ -81,6 +81,9 @@ inline BOOL esos_uiF14_isSW3DoublePressed (void) {
 
 // PUBLIC LED FUNCTIONS
 
+//Ryan: I think some of these functions are intended to actually
+//trigger LED changes, so I'm updating the LED register
+
 inline BOOL esos_uiF14_isLED1On (void) {
 	return (_st_esos_uiF14Data.b_LED1On==TRUE);
 }
@@ -90,18 +93,21 @@ inline BOOL esos_uiF14_isLED1Off (void) {
 }
 
 inline void esos_uiF14_turnLED1On (void) {
-	_st_esos_uiF14Data.b_LED1On = TRUE;
-	return;
+    LED1 = 1;
+    _st_esos_uiF14Data.b_LED1On = TRUE;
+    return;
 }
 
 inline void esos_uiF14_turnLED1Off (void) {
-	_st_esos_uiF14Data.b_LED1On = FALSE;
-	return;
+    LED1 = 0;
+    _st_esos_uiF14Data.b_LED1On = FALSE;
+    return;
 }
 
 inline void esos_uiF14_toggleLED1 (void) {
-	_st_esos_uiF14Data.b_LED1On ^= 1;
-	return;
+    LED1 = !LED1;
+    _st_esos_uiF14Data.b_LED1On ^= 1;
+    return;
 }
 
 inline void esos_uiF14_flashLED1( uint16_t u16_period) {
@@ -118,18 +124,21 @@ inline BOOL esos_uiF14_isLED2Off (void) {
 }
 
 inline void esos_uiF14_turnLED2On (void) {
-	_st_esos_uiF14Data.b_LED2On = TRUE;
-	return;
+    LED2 = 1;
+    _st_esos_uiF14Data.b_LED2On = TRUE;
+    return;
 }
 
 inline void esos_uiF14_turnLED2Off (void) {
-	_st_esos_uiF14Data.b_LED2On = FALSE;
-	return;
+    LED2 = 0;
+    _st_esos_uiF14Data.b_LED2On = FALSE;
+    return;
 }
 
 inline void esos_uiF14_toggleLED2 (void) {
-	_st_esos_uiF14Data.b_LED2On ^= 1;
-	return;
+    LED2 = !LED2;
+    _st_esos_uiF14Data.b_LED2On ^= 1;
+    return;
 }
 
 inline void esos_uiF14_flashLED2( uint16_t u16_period) {
@@ -146,18 +155,22 @@ inline BOOL esos_uiF14_isLED3Off (void) {
 }
 
 inline void esos_uiF14_turnLED3On (void) {
-	_st_esos_uiF14Data.b_LED3On = TRUE;
-	return;
+    //LED3 is low active
+    LED3 = 0;
+    _st_esos_uiF14Data.b_LED3On = TRUE;
+    return;
 }
 
 inline void esos_uiF14_turnLED3Off (void) {
-	_st_esos_uiF14Data.b_LED3On = FALSE;
-	return;
+    LED3 = 1;
+    _st_esos_uiF14Data.b_LED3On = FALSE;
+    return;
 }
 
 inline void esos_uiF14_toggleLED3 (void) {
-	_st_esos_uiF14Data.b_LED3On ^= 1;
-	return;
+    LED3 = !LED3;
+    _st_esos_uiF14Data.b_LED3On ^= 1;
+    return;
 }
 
 inline void esos_uiF14_flashLED3( uint16_t u16_period) {
@@ -245,7 +258,8 @@ void config_esos_uiF14() {
   CONFIG_SW3();
 
   //Step 3: setup RPG
-
+  CONFIG_RPGA();
+  CONFIG_RPGB();
   //TODO
 
 
