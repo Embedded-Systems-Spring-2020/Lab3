@@ -19,10 +19,15 @@ typedef struct {
     BOOL b_SW2Pressed;
     BOOL b_SW1DoublePressed;    
     BOOL b_SW3Pressed;
-    BOOL b_SW1DoublePressed;    
+    BOOL b_SW1DoublePressed;
+	uint16_t u16_doublePressLowerMs;
+	uint16_t u16_doublePressUpperMs;
     
     BOOL b_RPGAHigh;
     BOOL b_RPGBHigh;
+	uint16_t u16_RPGPeriodMs;
+	uint16_t u16_RPGMediumMs;
+	uint16_t u16_RPGFastMs;
     
     BOOL b_LED1On;
     uint16_t u16_LED1FlashPeriod;    
@@ -33,6 +38,7 @@ typedef struct {
     
     uint16_t u16_RPGCounter;
     uint16_t u16_lastRPGCounter;
+	;
 } _st_esos_uiF14Data_t;
 
 // DEFINEs and CONSTANTs
@@ -99,7 +105,7 @@ inline BOOL esos_uiF14_isRPGTurningCW (void);
 inline BOOL esos_uiF14_isRPGTurningCCW (void);
 
 void config_esos_uiF14();
-int16_t esos_uiF14_getRPGVelocity_i16 (void);
+int16_t esos_uiF14_getRPGPeriod (void);
 
 // PUBLIC API ESOS TASK MACROS
 
