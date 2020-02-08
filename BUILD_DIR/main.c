@@ -9,9 +9,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "revF14.h"
-#include "dataXfer.h"
+#include "dataXfer.h" //this is the library that uses the uc/pc variable on the bootloader
 
- enum { u16_DOUBLE_PRESS_LOWER_MS_NDX, 
+ enum { u16_DOUBLE_PRESS_LOWER_MS_NDX, // the variables that will be displayed on uc/pc variable tab
 		u16_DOUBLE_PRESS_UPPER_MS_NDX, 
 		u16_RPG_MEDIUM_MS_NDX, 
 		u16_RPG_FAST_MS_NDX,
@@ -21,6 +21,7 @@
 ESOS_USER_TASK(drawDisplay) {
     ESOS_TASK_BEGIN();
 		initDataXfer(); 
+		//format for below... var name from enum above, actual var name, T/F changeable, label
 		SPECIFY_VAR(u16_DOUBLE_PRESS_LOWER_MS_NDX, _st_esos_uiF14Data.u16_doublePressLowerMs, TRUE, "%u", "Lower double press time limit");
 		SPECIFY_VAR(u16_DOUBLE_PRESS_UPPER_MS_NDX, _st_esos_uiF14Data.u16_doublePressUpperMs, TRUE, "%u", "Upper double press time limit");
 		SPECIFY_VAR(u16_RPG_MEDIUM_MS_NDX, _st_esos_uiF14Data.u16_RPGMediumMs, TRUE, "%u", "Time in ms between RPG clicks -slow to medium");
@@ -36,19 +37,19 @@ ESOS_USER_TASK(drawDisplay) {
 			if (esos_uiF14_isSW2Pressed()){outString("Sw2 is Pushed  ")}
 			if (esos_uiF14_isSW2Released()){outString("Sw2 is Released")}
 			if (esos_uiF14_isSW2DoublePressed()){outString("Sw2 is Double Pressed\n")
-				ESOS_TASK_WAIT_TICKS(750)
+				ESOS_TASK_WAIT_TICKS(500)
 			}else {outString("Sw2 is NOT Double Pressed\n")}
 			if (esos_uiF14_isSW3Pressed()){outString("Sw3 is Pushed  ")}
 			if (esos_uiF14_isSW3Released()){outString("Sw3 is Released")}
 			if (esos_uiF14_isSW3DoublePressed()){outString("Sw3 is Double Pressed\n\n")
-				ESOS_TASK_WAIT_TICKS(750)
+				ESOS_TASK_WAIT_TICKS(5000)
 			}else {outString("Sw3 is NOT Double Pressed\n\n")}
 			if (esos_uiF14_isRpgTurning()){outString("RPG is Turning ")
 				if (esos_uiF14_isRpgTurningCW()){outString("CW ")}
 				else {outString("CCW")}
-				if esos_uiF14_isRpgTurningSlow()){outString("Slowly\n")}
-				else if (esos_uiF14_isRpgTurningMedium()){outString("Mediumly\n")}
-				else (esos_uiF14_isRpgTurningFast()){outString("Fastly\n")}
+				if esos_uiF14_isRpgTurningSlow()){outString(" Slowly\n")}
+				else if (esos_uiF14_isRpgTurningMedium()){outString(" Mediumly\n")}
+				else (esos_uiF14_isRpgTurningFast()){outString(" Fastly\n")}
 			else {outString("RPG is Not Turning")}
 			ESOS_TASK_WAIT_TICKS(50)
 			outString("\n\n\n\n");
