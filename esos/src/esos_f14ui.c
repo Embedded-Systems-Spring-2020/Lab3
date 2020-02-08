@@ -174,37 +174,43 @@ inline void esos_uiF14_turnYellowLEDOff (void) {
 
 // PUBLIC RPG FUNCTIONS
 
-inline uint16_t esos_uiF14_getRpgValue_u16 ( void ) {
-    return _st_esos_uiF14Data.u16_RPGCounter;
+inline uint16_t esos_uiF14_getRpgValue_u16(void) {
+	return _st_esos_uiF14Data.u16_RPGCounter;
 }
 
-inline BOOL esos_uiF14_isRpgTurning ( void ) {
-    return (esos_uiF14_getRpgVelocity_i16() != 0);
+inline BOOL esos_uiF14_isRpgTurning(void) {
+	return (esos_uiF14_getRpgVelocity_i16() != 0);
 }
 
-inline BOOL esos_uiF14_isRpgTurningSlow( void ) {
-  // not yet implemented
+inline BOOL esos_uiF14_isRpgTurningSlow(void) {
+	uint16_t vel = ABS(_st_esos_uiF14Data.i16_RPGVelocity);
+	return esos_uiF14_getRPGSlowThreshold() <= vel && vel < esos_uiF14_getRPGMediumThreshold();
+
 }
 
-inline BOOL esos_uiF14_isRpgTurningMedium( void ) {
-  // not yet implemented
+inline BOOL esos_uiF14_isRpgTurningMedium(void) {
+	uint16_t vel = ABS(_st_esos_uiF14Data.i16_RPGVelocity);
+	return esos_uiF14_getRPGMediumThreshold() <= vel && vel < esos_uiF14_getRPGFastThreshold();
 }
 
-inline BOOL esos_uiF14_isRpgTurningFast( void ) {
-  // not yet implemented
+inline BOOL esos_uiF14_isRpgTurningFast(void) {
+	return esos_uiF14_getRPGFastThreshold() < ABS(_st_esos_uiF14Data.u16_RPGVelocity);
 }
 
-inline BOOL esos_uiF14_isRpgTurningCW( void ) {
-  // not yet implemented
+inline BOOL esos_uiF14_isRpgTurningCW(void) {
+	uint16_t vel = _st_esos_uiF14Data.i16_RPGVelocity;
+	return (vel > 0) && (esos_uiF14_getRPGSlowThreshold() <= ABS(vel));
 }
 
-inline BOOL esos_uiF14_isRpgTurningCCW( void ) {
-  // not yet implemented
+inline BOOL esos_uiF14_isRpgTurningCCW(void) {
+	uint16_t vel = _st_esos_uiF14Data.i16_RPGVelocity;
+	return (vel < 0) && (esos_uiF14_getRPGSlowThreshold() <= ABS(vel));
 }
 
-int16_t esos_uiF14_getRpgVelocity_i16( void ) {
-  // not yet implemented
+inline int16_t esos_uiF14_getRpgVelocity_i16(void) {
+	return _st_esos_uiF14Data.i16_RPGVelocity;
 }
+
 
 // UIF14 INITIALIZATION FUNCTION
 
@@ -224,7 +230,7 @@ void config_esos_uiF14() {
 
   //Step 3: setup RPG
 
-  //TODO
+  __RPG_UI_CONFIG();
 
 
   esos_RegisterTask( __uiF14_task );
