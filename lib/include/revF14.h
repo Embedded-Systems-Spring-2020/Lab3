@@ -2,7 +2,7 @@
 // of the REVF14_H token
 #ifndef REVF14_H    
 #define REVF14_H
-
+#define NUM_UART_MODS 1
 #include "pic24_all.h"
 
 // The following definitions are more or less directly from the code examples 
@@ -58,5 +58,10 @@ void CONFIG_SW3()  {
 
 #define SW3_PRESSED (_RC15 == 0)
 #define SW3_RELEASED (_RC15 == 1)
+
+#define RPGA_HIGH (RB_8 == 1)
+#define RPGA_LOW (RB_8 == 0)
+#define RPGB_HIGH (RB_9 == 1)
+#define RPGB_LOW (RB_9 == 0)
 
 #endif // closes the #ifndef block
