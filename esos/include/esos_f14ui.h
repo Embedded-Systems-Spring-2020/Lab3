@@ -23,12 +23,27 @@ typedef struct {
 	uint16_t u16_doublePressLowerMs;
 	uint16_t u16_doublePressUpperMs;
     
-    BOOL b_RPGAHigh;
-    BOOL b_RPGBHigh;
+    BOOL b_RPGACurrent;
+    BOOL b_RPGALast;
+	BOOL b_RPGBCurrent;
+	
+	BOOL b_RPGFast;
+	BOOL b_RPGMedium;
+	BOOL b_RPGSlow;
+	BOOL b_RPGNotMoving;
+	
+	uint16_t u16_RPGLastChangeMs;
 	uint16_t u16_RPGPeriodMs;
-	uint16_t u16_RPGMediumMs;
-	uint16_t u16_RPGFastMs;
-    
+	uint16_t u16_RPGNotMovingToSlowPeriodMs;
+	uint16_t u16_RPGSlowToMediumPeriodMs;
+	uint16_t u16_RPGMediumToFastPeriodMs;
+	
+	BOOL b_RPGCW;
+    BOOL b_RPGCCW;
+		
+    uint16_t u16_RPGCounter;
+    uint16_t u16_lastRPGCounter;
+	
     BOOL b_LED1On;
     uint16_t u16_LED1FlashPeriod;    
     BOOL b_LED2On;
@@ -36,9 +51,6 @@ typedef struct {
     BOOL b_LED3On;
     uint16_t u16_LED3FlashPeriod;        
     
-    uint16_t u16_RPGCounter;
-    uint16_t u16_lastRPGCounter;
-	;
 } _st_esos_uiF14Data_t;
 
 // DEFINEs and CONSTANTs
@@ -52,11 +64,19 @@ _st_esos_uiF14Data_t _st_esos_uiF14Data;
 
 // PRIVATE FUNCTION PROTOTYPES
 
-uint16_t esos_uiF14_getRPGCounter (void);
-void esos_ui_setRPGCounter (uint16_t);
+uint16_t esos_uiF14_getRPGCounter (void){
+	return(_st_esos_uiF14Data.u16_RPGCounter);
+}
+void esos_ui_setRPGCounter (uint16_t u16_newRPGCounter){
+	_st_esos_uiF14Data.u16_RPGCounter = uint16_t u16_newRPGCounter;
+}
 
-uint16_t esos_uiF14_getLastRPGCounter (void);
-void esos_ui_setLastRPGCounter (uint16_t);
+uint16_t esos_uiF14_getLastRPGCounter (void){
+	return(_st_esos_uiF14Data.u16_lastRPGCounter);
+}
+void esos_ui_setLastRPGCounter (uint16_t u16_newRPGCounter){
+	_st_esos_uiF14Data.u16_lastRPGCounter = uint16_t u16_newRPGCounter;
+}
 
 ESOS_USER_TASK __uiF14_task;
 

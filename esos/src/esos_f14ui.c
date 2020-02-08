@@ -351,10 +351,7 @@ ESOS_USER_TASK( __esos_uiF14_task ){
 		}
 		esos_UnregisterTimer(__doublepress_SW3_timer);								
 	}	
-	
-	//_st_esos_uiF14Data.b_RPGAHigh;
-	//_st_esos_uiF14Data.b_RPGBHigh;
-	
+		
 	// LED1 (Red) 
 	LED1 = _st_esos_uiF14Data.b_LED1On;
 	//_st_esos_uiF14Data.u16_LED1FlashPeriod;    
@@ -367,9 +364,50 @@ ESOS_USER_TASK( __esos_uiF14_task ){
 	LED3 = _st_esos_uiF14Data.b_LED3On;
 	//_st_esos_uiF14Data.u16_LED3FlashPeriod;        
 	
-	//_st_esos_uiF14Data.u16_RPGCounter;
-	//_st_esos_uiF14Data.u16_lastRPGCounter;
-
+	//+++++++++++++++RPG++++++++++++++++++++
+	//determines if RPG is moving
+	if (RPGA != _st_esos_uiF14Data.b_RPGALast){ //is current RPGA different from old RPGA
+		//determines time since last change, used for speed calc
+		_st_esos_uiF14Data.RPGPeriodMs = (esos_GetSystemTick()) - 
+										 (_st_esos_uiF14Data.u16_RPGLastChangeMs); 
+		_st_esos_uiF14Data.b_RPGNotMoving = false;
+		// compare time since last RPGA change to slow/med/fast cutoffs
+		if (_st_esos_uiF14Data.RPGPeriodMs >= _st_esos_uiF14Data.u16_RPGMediumToFastPeriodMs)
+			_st_esos_uiF14Data.b_RPGFast = TRUE;
+		else if (_st_esos_uiF14Data.RPGPeriodMs >= _st_esos_uiF14Data.u16_RPGSlowToMediumPeriodMs)
+			_st_esos_uiF14Data.b_RPGMedium = TRUE;
+		else
+			st_esos_uiF14Data.b_RPGSlow = TRUE;
+		
+		//determine CW or CCW; remember RPGA just changed
+		if ((RPGA == 0 && RPGB == 1) || (RPGA == 1 && RPGB == 0){
+			_st_esos_uiF14Data.b_RPGCW = TRUE;
+			_st_esos_uiF14Data.b_RPGCCW = FALSE;
+		}
+		else{
+			_st_esos_uiF14Data.b_RPGCW = FALSE;
+			_st_esos_uiF14Data.b_RPGCCW = TRUE;
+		}
+		//update the counter for later use in revolution calculations 
+		if (_st_esos_uiF14Data.b_RPGCW){
+			_st_esos_uiF14Data.u16_RPGCounter +=1;
+		}
+		if (_st_esos_uiF14Data.b_RPGCCW){
+			_st_esos_uiF14Data.u16_RPGCounter -=1;
+		}
+	}
+	else {  //reset flags after short delay to show no RPG motion
+		ESOS_USER_TASK_WAIT_TICKS(_st_esos_uiF14Data.u16_RPGNotMovingToSlowPeriodMs);
+		_st_esos_uiF14Data.b_RPGNotMoving = TRUE;
+		_st_esos_uiF14Data.b_RPGFast = FALSE;
+		_st_esos_uiF14Data.b_RPGMedium = FALSE;
+		_st_esos_uiF14Data.b_RPGSlow = FALSE;
+		_st_esos_uiF14Data.b_RPGCW = FALSE;
+		_st_esos_uiF14Data.b_RPGCCW = FALSE;
+	}
+	
+	
+	
     ESOS_TASK_WAIT_TICKS( __ESOS_UIF14_UI_PERIOD );
   }
   ESOS_TASK_END();
