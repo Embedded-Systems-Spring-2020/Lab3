@@ -8,6 +8,13 @@
 # include <esos_f14ui.h>
 # include <revF14.h>
 
+#define DOUBLEPRESS_SW1_TIMER_EXPIRED ESOS_USER_FLAG_1
+#define DOUBLEPRESS_SW2_TIMER_EXPIRED ESOS_USER_FLAG_2
+#define DOUBLEPRESS_SW3_TIMER_EXPIRED ESOS_USER_FLAG_3
+
+#define DOUBLE_PRESS_LOWER_BOUND_MS 120
+#define DOUBLE_PRESS_UPPER_BOUND_MS 300
+
 // PRIVATE FUNCTIONS
 inline void _esos_uiF14_setRPGCounter (uint16_t newValue) {
     _st_esos_uiF14Data.u16_RPGCounter = newValue;
@@ -29,7 +36,12 @@ inline BOOL esos_uiF14_isSW1Released (void) {
 }
 
 inline BOOL esos_uiF14_isSW1DoublePressed (void) {
-    return (_st_esos_uiF14Data.b_SW1DoublePressed==TRUE);
+	if (_st_esos_uiF14Data.b_SW1DoublePressed==TRUE) {
+		_st_esos_uiF14Data.b_SW1DoublePressed = FALSE;
+		return TRUE;
+	} else {
+		return FALSE;
+	}
 }
 
 inline BOOL esos_uiF14_isSW2Pressed (void) {
@@ -41,7 +53,12 @@ inline BOOL esos_uiF14_isSW2Released (void) {
 }
 
 inline BOOL esos_uiF14_isSW2DoublePressed (void) {
-    return (_st_esos_uiF14Data.b_SW2DoublePressed==TRUE);
+	if (_st_esos_uiF14Data.b_SW2DoublePressed==TRUE) {
+		_st_esos_uiF14Data.b_SW2DoublePressed = FALSE;
+		return TRUE;
+	} else {
+		return FALSE;
+	}
 }
 
 inline BOOL esos_uiF14_isSW3Pressed (void) {
@@ -53,9 +70,13 @@ inline BOOL esos_uiF14_isSW3Released (void) {
 }
 
 inline BOOL esos_uiF14_isSW3DoublePressed (void) {
-    return (_st_esos_uiF14Data.b_SW3DoublePressed==TRUE);
+	if (_st_esos_uiF14Data.b_SW3DoublePressed==TRUE) {
+		_st_esos_uiF14Data.b_SW3DoublePressed = FALSE;
+		return TRUE;
+	} else {
+		return FALSE;
+	}
 }
-
 
 // PUBLIC LED FUNCTIONS
 
@@ -245,13 +266,110 @@ void config_esos_uiF14() {
   esos_RegisterTask( __uiF14_task );
 }
 
+ESOS_USER_TIMER(__doublepress_SW1_timer) {
+	esos_SetUserFlag(DOUBLEPRESS_SW1_TIMER_EXPIRED);
+}
+
+ESOS_USER_TIMER(__doublepress_SW2_timer) {
+	esos_SetUserFlag(DOUBLEPRESS_SW2_TIMER_EXPIRED);
+}
+
+ESOS_USER_TIMER(__doublepress_SW3_timer) {
+	esos_SetUserFlag(DOUBLEPRESS_SW3_TIMER_EXPIRED);
+}
 
 // UIF14 task to manage user-interface
 ESOS_USER_TASK( __esos_uiF14_task ){
   
   ESOS_TASK_BEGIN();
   while(TRUE) {
-    // do your UI stuff here
+    /* THOUGHTS ON THIS SOLUTION FOR PUSHBUTTON DOUBLE-PRESSES
+		Pros:
+			Dead simple
+			Easy to read
+			Maybe easy to maintain?? we will se
+		Cons:
+			MIGHT introduce latency to our main loop, which is bad (probably not
+				significant doe)
+	*/
+	  
+	
+	  																			// yeah im commenting past 80 chars 
+	// SW1_PRESSED																// what are you gonna do about it
+	if (SW1_PRESSED) {															//	hopefully not dock points uhhh
+		ESOS_TASK_WAIT_TICKS(DOUBLE_PRESS_LOWER_BOUND_MS);						// Wait a small amount of time
+		esos_RegisterTimer(__doublepress_SW1_timer, DOUBLE_PRESS_UPPER_BOUND_MS);	// start timer
+		ESOS_TASK_WAIT_UNTIL(													
+			esos_IsUserFlagSet(DOUBLEPRESS_SW1_TIMER_EXPIRED) || 					// Funky identation to keep code 
+			SW1_PRESSED															// under 80 chars but mostly readable
+		);				
+		if (!esos_IsUserFlagSet(DOUBLEPRESS_SW1_TIMER_EXPIRED)) {					// If we branch here, the switch was not
+			_st_esos_uiF14Data.b_SW1DoublePressed = TRUE;						// pressed again in time; single press
+			_st_esos_uiF14Data.b_SW1Pressed = FALSE;
+		} else {
+			_st_esos_uiF14Data.b_SW1Pressed = TRUE;								// If we branch here, the switch must
+			_st_esos_uiF14Data.b_SW1DoublePressed = FALSE;						// have been pressed; double press
+			esos_ClearUserFlag(DOUBLEPRESS_SW1_TIMER_EXPIRED);						// Reset the flag for next time
+		}
+		esos_UnregisterTimer(__doublepress_SW1_timer);								// Disable the timer until we need it 
+	}																			//again
+
+	// SW2_PRESSED
+	if (SW2_PRESSED) {															
+		ESOS_TASK_WAIT_TICKS(DOUBLE_PRESS_LOWER_BOUND_MS);						
+		esos_RegisterTimer(__doublepress_SW2_timer, DOUBLE_PRESS_UPPER_BOUND_MS);
+		ESOS_TASK_WAIT_UNTIL(													
+			esos_IsUserFlagSet(DOUBLEPRESS_SW2_TIMER_EXPIRED) || 				
+			SW2_PRESSED															
+		);				
+		if (!esos_IsUserFlagSet(DOUBLEPRESS_SW1_TIMER_EXPIRED)) {				
+			_st_esos_uiF14Data.b_SW2DoublePressed = TRUE;						
+			_st_esos_uiF14Data.b_SW2Pressed = FALSE;
+		} else {
+			_st_esos_uiF14Data.b_SW2Pressed = TRUE;								
+			_st_esos_uiF14Data.b_SW2DoublePressed = FALSE;						
+			esos_ClearUserFlag(DOUBLEPRESS_SW2_TIMER_EXPIRED);						
+		}
+		esos_UnregisterTimer(__doublepress_SW2_timer);								
+	}	
+
+	// SW3_PRESSED
+	if (SW3_PRESSED) {															
+		ESOS_TASK_WAIT_TICKS(DOUBLE_PRESS_LOWER_BOUND_MS);						
+		esos_RegisterTimer(__doublepress_SW3_timer, DOUBLE_PRESS_UPPER_BOUND_MS);
+		ESOS_TASK_WAIT_UNTIL(													
+			esos_IsUserFlagSet(DOUBLEPRESS_SW3_TIMER_EXPIRED) || 				
+			SW2_PRESSED															
+		);				
+		if (!esos_IsUserFlagSet(DOUBLEPRESS_SW3_TIMER_EXPIRED)) {				
+			_st_esos_uiF14Data.b_SW2DoublePressed = TRUE;						
+			_st_esos_uiF14Data.b_SW2Pressed = FALSE;
+		} else {
+			_st_esos_uiF14Data.b_SW3nbPressed = TRUE;								
+			_st_esos_uiF14Data.b_SW3DoublePressed = FALSE;						
+			esos_ClearUserFlag(DOUBLEPRESS_SW3_TIMER_EXPIRED);						
+		}
+		esos_UnregisterTimer(__doublepress_SW3_timer);								
+	}	
+	
+	//_st_esos_uiF14Data.b_RPGAHigh;
+	//_st_esos_uiF14Data.b_RPGBHigh;
+	
+	// LED1 (Red) 
+	LED1 = _st_esos_uiF14Data.b_LED1On;
+	//_st_esos_uiF14Data.u16_LED1FlashPeriod;    
+
+	// LED2 (Yellow) 
+	LED2 = _st_esos_uiF14Data.b_LED2On;
+	//_st_esos_uiF14Data.u16_LED2FlashPeriod;    
+
+	// LED3 (Green)    
+	LED3 = _st_esos_uiF14Data.b_LED3On;
+	//_st_esos_uiF14Data.u16_LED3FlashPeriod;        
+	
+	//_st_esos_uiF14Data.u16_RPGCounter;
+	//_st_esos_uiF14Data.u16_lastRPGCounter;
+
     ESOS_TASK_WAIT_TICKS( __ESOS_UIF14_UI_PERIOD );
   }
   ESOS_TASK_END();
