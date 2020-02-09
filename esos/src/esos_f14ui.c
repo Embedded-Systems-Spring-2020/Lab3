@@ -68,16 +68,19 @@ inline BOOL esos_uiF14_isLED1Off (void) {
 }
 
 inline void esos_uiF14_turnLED1On (void) {
+    LED1 = 1; //turning on LED1
     _st_esos_uiF14Data.b_LED1On = TRUE;
     return;
 }
 
 inline void esos_uiF14_turnLED1Off (void) {
+     LED1=0; //turning off LED1
     _st_esos_uiF14Data.b_LED1On = FALSE;
     return;
 }
 
 inline void esos_uiF14_toggleLED1 (void) {
+     LED1=!LED1; //toggles LED1
     _st_esos_uiF14Data.b_LED1On ^= 1;
     return;
 }
@@ -96,16 +99,19 @@ inline BOOL esos_uiF14_isLED2Off (void) {
 }
 
 inline void esos_uiF14_turnLED2On (void) {
+     LED2=1; //turn on LED2
     _st_esos_uiF14Data.b_LED2On = TRUE;
     return;
 }
 
 inline void esos_uiF14_turnLED2Off (void) {
+     LED2=0; //turn off LED2
     _st_esos_uiF14Data.b_LED2On = FALSE;
     return;
 }
 
 inline void esos_uiF14_toggleLED2 (void) {
+     LED2=!LED2;
     _st_esos_uiF14Data.b_LED2On ^= 1;
     return;
 }
@@ -124,16 +130,19 @@ inline BOOL esos_uiF14_isLED3Off (void) {
 }
 
 inline void esos_uiF14_turnLED3On (void) {
+    LED3=1; //turn on LED3
     _st_esos_uiF14Data.b_LED3On = TRUE;
     return;
 }
 
 inline void esos_uiF14_turnLED3Off (void) {
+    LED3=0; //turn off LED3
     _st_esos_uiF14Data.b_LED3On = FALSE;
     return;
 }
 
 inline void esos_uiF14_toggleLED3 (void) {
+    LED3=!LED3; //toggle LED3
     _st_esos_uiF14Data.b_LED3On ^= 1;
     return;
 }
@@ -236,6 +245,55 @@ void config_esos_uiF14() {
   esos_RegisterTask( __uiF14_task );
 }
 
+////if the LED is turned off at the time of the flash we want to turn it on...
+//can add an else condition to turn the LED off if it is on during the flash..however 
+//will that be necessary?
+
+ESOS_USER_TIMER(swTimerLED1)
+{
+     if (esos_uiF14_isLED1Off() == true)
+        {
+            //turn led on
+            esos_uiF14_turnLED1On(); //LED1 = 1;
+            esos_uiF14_turnLED1Off();
+        }
+}
+ESOS_USER_TIMER(swTimerLED2)
+{
+	if (esos_uiF14_isLED2Off() == true) 
+        {
+            esos_uiF14_turnLED2On();  //LED2 = 1;
+            esos_uiF14_turnLED2Off();
+        }
+}
+ESOS_USER_TIMER(swTimerLED3)
+{
+	if(esos_uiF14_isLED3Off() == true)
+        {
+            esos_uiF14_turnLED3On(); //LED3 = 1;
+            esos_uiF14_turnLED3Off();
+        }
+}
+    //if LEDS are already on...should we turn it off and then back on as a "flash".
+
+   // if (esos_uiF14_isLED1On() == true) {
+   //     
+   //     esos_uif14_turnLED1Off(); //LED1 = 0;
+   //     esos_uiF14_turnLED1On();
+   // }
+   // 
+   // if (esos_uiF14_isLED2On() == true) {
+   //     esos_uiF14_turnLED2Off()   //LED2 = 0;
+   //     esos_uiF14_turnLED2On();
+   // }
+
+   //  if (esos_uiF14_isLED3On() == true) {
+   //     esos_uiF14_turnLED3Off()  //LED3 = 0;
+   //     esos_uiF14_turnLED3On();
+   // }
+
+}
+
 
 // UIF14 task to manage user-interface
 ESOS_USER_TASK( __esos_uiF14_task ){
@@ -244,6 +302,46 @@ ESOS_USER_TASK( __esos_uiF14_task ){
   while(TRUE) {
     // do your UI stuff here
     ESOS_TASK_WAIT_TICKS( __ESOS_UIF14_UI_PERIOD );
+	  
+   //flashes the LED lights...I HOPE. Based on the LED flash period given. 
+	esos_RegisterTimer(swTimerLED1, st_esos_uiF14Data.u16_LED1FlashPeriod);
+        esos_RegisterTimer(swTimerLED2, st_esos_uiF14Data.u16_LED2FlashPeriod);
+        esos_RegisterTimer(swTimerLED3, st_esos_uiF14Data.u16_LED3FlashPeriod);
   }
   ESOS_TASK_END();
 }
+
+//-------------------------INITIAL THOUGHTS--------------------------------------//
+
+    //not sure how to implement but I will figure it out :)
+    //we need a delay to actually flash the led....
+
+    //ESOS_TASK_BEGIN();
+
+    //while (TRUE)
+    //{
+    //    //we need to know what the flash period is....flash period is in ms
+    //    //...then we can determine how long we can flash the leds per flash period..
+
+    //    //------------IDEA---------------------IDEA----------//
+    //    // uint_16 pd = _st_esos_uiF14Data.u16_LED1FlashPeriod; 
+    //    // LED1 = 1;
+    //    // ESOS_TASK_WAIT_TICKS(pd);
+    //    //turn LED1 off
+
+    //    // uint_16 pd2 = _st_esos_uiF14Data.u16_LED2FlashPeriod; 
+    //    // LED2 = 1;
+    //    // ESOS_TASK_WAIT_TICKS(pd2);
+    //    //turn LED2 off
+
+    //    //uint_16 pd3 = _st_esos_uiF14Data.u16_LED3FlashPeriod;
+    //    // LED3 = 1;
+    //    // ESOS_TASK_WAIT_TICKS(pd3);
+    //    //turn LED3 off
+    //    //------------END------------------------END-----------//
+
+
+    //    return FALSE
+    //}
+
+    //ESOS_TASK_END();
