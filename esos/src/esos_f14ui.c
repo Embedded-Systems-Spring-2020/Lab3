@@ -97,19 +97,16 @@ inline BOOL esos_uiF14_isLED1Off (void) {
 }
 
 inline void esos_uiF14_turnLED1On (void) {
-    LED1 = 1;
     _st_esos_uiF14Data.b_LED1On = TRUE;
     return;
 }
 
 inline void esos_uiF14_turnLED1Off (void) {
-    LED1 = 0;
     _st_esos_uiF14Data.b_LED1On = FALSE;
     return;
 }
 
 inline void esos_uiF14_toggleLED1 (void) {
-    LED1 = !LED1;
     _st_esos_uiF14Data.b_LED1On ^= 1;
     return;
 }
@@ -136,19 +133,16 @@ inline BOOL esos_uiF14_isLED2Off (void) {
 }
 
 inline void esos_uiF14_turnLED2On (void) {
-    LED2 = 1;
     _st_esos_uiF14Data.b_LED2On = TRUE;
     return;
 }
 
 inline void esos_uiF14_turnLED2Off (void) {
-    LED2 = 0;
     _st_esos_uiF14Data.b_LED2On = FALSE;
     return;
 }
 
 inline void esos_uiF14_toggleLED2 (void) {
-    LED2 = !LED2;
     _st_esos_uiF14Data.b_LED2On ^= 1;
     return;
 }
@@ -176,19 +170,16 @@ inline BOOL esos_uiF14_isLED3Off (void) {
 
 inline void esos_uiF14_turnLED3On (void) {
     //LED3 is low active
-    LED3 = 0;
     _st_esos_uiF14Data.b_LED3On = TRUE;
     return;
 }
 
 inline void esos_uiF14_turnLED3Off (void) {
-    LED3 = 1;
     _st_esos_uiF14Data.b_LED3On = FALSE;
     return;
 }
 
 inline void esos_uiF14_toggleLED3 (void) {
-    LED3 = !LED3;
     _st_esos_uiF14Data.b_LED3On ^= 1;
     return;
 }
