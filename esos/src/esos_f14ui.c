@@ -8,13 +8,9 @@
 # include <esos_f14ui.h>
 # include <revF14.h>
 
-#define DOUBLEPRESS_SW1_TIMER_EXPIRED ESOS_USER_FLAG_1
-#define DOUBLEPRESS_SW2_TIMER_EXPIRED ESOS_USER_FLAG_2
-#define DOUBLEPRESS_SW3_TIMER_EXPIRED ESOS_USER_FLAG_3
-
-#define DOUBLE_PRESS_UPPER_BOUND_MS 300
-
 #define MINIMUM_LED_FLASH_PERIOD 100
+
+#define DOUBLE_PRESS_UPPER_BOUND_TICKS = 25
 
 // PRIVATE FUNCTIONS
 inline void _esos_uiF14_setRPGCounter (int16_t i16_newValue) {
@@ -308,17 +304,13 @@ ESOS_USER_TASK( __esos_uiF14_task ){
   static LED2_counter = 0;
   static LED3_counter = 0;
 
+  // init to -1 to disable counters by default
+  static SW1_doublepress_counter = -1;
+  static SW2_doublepress_counter = -1;
+  static SW3_doublepress_counter = -1;
+
   ESOS_TASK_BEGIN();
   while(TRUE) {
-    /* THOUGHTS ON THIS SOLUTION FOR PUSHBUTTON DOUBLE-PRESSES
-		Pros:
-			Dead simple
-			Easy to read
-			Maybe easy to maintain?? we will se
-		Cons:
-			MIGHT introduce latency to our main loop, which is bad (probably not
-				significant doe)
-	*/
 
 	//-------- LED Initial States
 	// LED1 (Red) 
@@ -364,62 +356,57 @@ ESOS_USER_TASK( __esos_uiF14_task ){
 		esos_uiF14_toggleLED3();
 		LED3_counter = 0;
 	}
-	  
-	
-	  																			// yeah im commenting past 80 chars 
-	// SW1_PRESSED																// what are you gonna do about it
-	if (SW1_PRESSED) {															//	hopefully not dock points uhhh
-		esos_RegisterTimer(__doublepress_SW1_timer, DOUBLE_PRESS_UPPER_BOUND_MS);	// start timer
-		ESOS_TASK_WAIT_UNTIL(													
-			esos_IsUserFlagSet(DOUBLEPRESS_SW1_TIMER_EXPIRED) || 					// Funky identation to keep code 
-			SW1_PRESSED															// under 80 chars but mostly readable
-		);				
-		if (!esos_IsUserFlagSet(DOUBLEPRESS_SW1_TIMER_EXPIRED)) {					// If we branch here, the switch was not
-			_st_esos_uiF14Data.b_SW1DoublePressed = TRUE;						// pressed again in time; single press
+
+	/* SWITCH STATE LOGIC */
+	if (SW1_PRESSED || SW1_doublepress_counter >= DOUBLE_PRESS_UPPER_BOUND_TICKS) {
+		if (SW1_doublepress_counter >= DOUBLE_PRESS_UPPER_BOUND_TICKS) {						
+			SW1_doublepress_counter = -1;		// Counter expired, no double press event, disable counter
+			_st_esos_uiF14Data.b_SW1DoublePressed = FALSE;
+			_st_esos_uiF14Data.b_SW1Pressed = TRUE;
+		// Switch was pressed while counter was running and not expired
+		} else if (SW1_doublepress_counter < DOUBLE_PRESS_UPPER_BOUND_TICKS && SW1_doublepress_counter != -1) {
+			_st_esos_uiF14Data.b_SW1DoublePressed = TRUE;
 			_st_esos_uiF14Data.b_SW1Pressed = FALSE;
+		// Otherwise, the switch was pressed, start the timer
 		} else {
-			_st_esos_uiF14Data.b_SW1Pressed = TRUE;								// If we branch here, the switch must
-			_st_esos_uiF14Data.b_SW1DoublePressed = FALSE;						// have been pressed; double press
-			esos_ClearUserFlag(DOUBLEPRESS_SW1_TIMER_EXPIRED);						// Reset the flag for next time
+			SW1_doublepress_counter = 0;		// Start the timer
 		}
-		esos_UnregisterTimer(__doublepress_SW1_timer);								// Disable the timer until we need it 
-	}																			//again
+	}
 
-	// SW2_PRESSED
-	if (SW2_PRESSED) {															
-		esos_RegisterTimer(__doublepress_SW2_timer, DOUBLE_PRESS_UPPER_BOUND_MS);
-		ESOS_TASK_WAIT_UNTIL(													
-			esos_IsUserFlagSet(DOUBLEPRESS_SW2_TIMER_EXPIRED) || 				
-			SW2_PRESSED															
-		);				
-		if (!esos_IsUserFlagSet(DOUBLEPRESS_SW1_TIMER_EXPIRED)) {				
-			_st_esos_uiF14Data.b_SW2DoublePressed = TRUE;						
+	if (SW2_PRESSED || SW2_doublepress_counter >= DOUBLE_PRESS_UPPER_BOUND_TICKS) {
+		if (SW2_doublepress_counter >= DOUBLE_PRESS_UPPER_BOUND_TICKS) {						
+			SW2_doublepress_counter = -1;		// Counter expired, no double press event, disable counter
+			_st_esos_uiF14Data.b_SW2DoublePressed = FALSE;
+			_st_esos_uiF14Data.b_SW2Pressed = TRUE;
+		// Switch was pressed while counter was running and not expired
+		} else if (SW2_doublepress_counter < DOUBLE_PRESS_UPPER_BOUND_TICKS && SW2_doublepress_counter != -1) {
+			_st_esos_uiF14Data.b_SW2DoublePressed = TRUE;
 			_st_esos_uiF14Data.b_SW2Pressed = FALSE;
+		// Otherwise, the switch was pressed, start the timer
 		} else {
-			_st_esos_uiF14Data.b_SW2Pressed = TRUE;								
-			_st_esos_uiF14Data.b_SW2DoublePressed = FALSE;						
-			esos_ClearUserFlag(DOUBLEPRESS_SW2_TIMER_EXPIRED);						
+			SW2_doublepress_counter = 0;		// Start the timer
 		}
-		esos_UnregisterTimer(__doublepress_SW2_timer);								
-	}	
+	}
 
-	// SW3_PRESSED
-	if (SW3_PRESSED) {															
-		esos_RegisterTimer(__doublepress_SW3_timer, DOUBLE_PRESS_UPPER_BOUND_MS);
-		ESOS_TASK_WAIT_UNTIL(													
-			esos_IsUserFlagSet(DOUBLEPRESS_SW3_TIMER_EXPIRED) || 				
-			SW3_PRESSED															
-		);				
-		if (!esos_IsUserFlagSet(DOUBLEPRESS_SW3_TIMER_EXPIRED)) {				
-			_st_esos_uiF14Data.b_SW3DoublePressed = TRUE;						
+	if (SW3_PRESSED || SW3_doublepress_counter >= DOUBLE_PRESS_UPPER_BOUND_TICKS) {
+		if (SW3_doublepress_counter >= DOUBLE_PRESS_UPPER_BOUND_TICKS) {						
+			SW3_doublepress_counter = -1;		// Counter expired, no double press event, disable counter
+			_st_esos_uiF14Data.b_SW3DoublePressed = FALSE;
+			_st_esos_uiF14Data.b_SW3Pressed = TRUE;
+		// Switch was pressed while counter was running and not expired
+		} else if (SW3_doublepress_counter < DOUBLE_PRESS_UPPER_BOUND_TICKS && SW3_doublepress_counter != -1) {
+			_st_esos_uiF14Data.b_SW3DoublePressed = TRUE;
 			_st_esos_uiF14Data.b_SW3Pressed = FALSE;
+		// Otherwise, the switch was pressed, start the timer
 		} else {
-			_st_esos_uiF14Data.b_SW3Pressed = TRUE;								
-			_st_esos_uiF14Data.b_SW3DoublePressed = FALSE;						
-			esos_ClearUserFlag(DOUBLEPRESS_SW3_TIMER_EXPIRED);						
+			SW3_doublepress_counter = 0;		// Start the timer
 		}
-		esos_UnregisterTimer(__doublepress_SW3_timer);								
-	}	
+	}
+
+	/* SWITCH COUNTER LOGIC */
+	if (SW1_doublepress_counter != -1) {SW1_doublepress_counter++}
+	if (SW2_doublepress_counter != -1) {SW2_doublepress_counter++}
+	if (SW3_doublepress_counter != -1) {SW3_doublepress_counter++}
 	
 	//+++++++++++++++RPG++++++++++++++++++++
 	//determines if RPG is moving
