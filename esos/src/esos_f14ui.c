@@ -16,14 +16,17 @@
 #define DOUBLE_PRESS_UPPER_BOUND_MS 300
 
 // PRIVATE FUNCTIONS
-inline void _esos_uiF14_setRPGCounter (uint16_t newValue) {
-    _st_esos_uiF14Data.u16_RPGCounter = newValue;
-    return;
+inline void _esos_uiF14_setRPGCounter (int16_t i16_newValue) {
+    _st_esos_uiF14Data.i16_RPGCounter = i16_newValue;
 }
-
-inline void _esos_uiF14_setLastRPGCounter (uint16_t newValue) {
-    _st_esos_uiF14Data.u16_lastRPGCounter = newValue;
-    return;
+inline int16_t _esos_uiF14_getLastRPGCounter (void){
+	return(_st_esos_uiF14Data.i16_lastRPGCounter);
+}
+inline void _esos_uiF14_setLastRPGCounter (int16_t i16_newRPGCounter){
+	_st_esos_uiF14Data.i16_lastRPGCounter = i16_newRPGCounter;
+}
+inline uint16_t _esos_uiF14_getRPGPeriod (void){
+	return(_st_esos_uiF14Data.u16_RPGPeriodMs);
 }
 
 // PUBLIC SWITCH FUNCTIONS
@@ -211,8 +214,8 @@ inline void esos_uiF14_turnYellowLEDOff (void) {
 
 // PUBLIC RPG FUNCTIONS
 
-inline uint16_t esos_uiF14_getRpgValue_u16 ( void ) {
-    return _st_esos_uiF14Data.u16_RPGCounter;
+inline int16_t esos_uiF14_getRpgCounter_i16 ( void ) {
+    return _st_esos_uiF14Data.i16_RPGCounter;
 }
 
 inline BOOL esos_uiF14_isRpgTurning ( void ) {
@@ -239,7 +242,7 @@ inline BOOL esos_uiF14_isRpgTurningCCW( void ) {
 	return _st_esos_uiF14Data.b_RPGCCW;
 }
 
-inline int16_t esos_uiF14_getRpgPeriod( void ) {
+inline uint16_t esos_uiF14_getRpgPeriod( void ) {
 	return _st_esos_uiF14Data.u16_RPGPeriodMs;
 }
 
@@ -369,18 +372,22 @@ ESOS_USER_TASK( __esos_uiF14_task ){
 	
 	//+++++++++++++++RPG++++++++++++++++++++
 	//determines if RPG is moving
-	if (RPGA != _st_esos_uiF14Data.b_RPGALast){ //is current RPGA different from old RPGA
+	if (RPGA != _st_esos_uiF14Data.b_RPGALast){ 
 		//determines time since last change, used for speed calc
 		_st_esos_uiF14Data.RPGPeriodMs = (esos_GetSystemTick()) - 
 										 (_st_esos_uiF14Data.u16_RPGLastChangeMs); 
 		_st_esos_uiF14Data.b_RPGNotMoving = false;
+		
 		// compare time since last RPGA change to slow/med/fast cutoffs
-		if (_st_esos_uiF14Data.RPGPeriodMs >= _st_esos_uiF14Data.u16_RPGMediumToFastPeriodMs)
+		if (_st_esos_uiF14Data.RPGPeriodMs >= _st_esos_uiF14Data.u16_RPGMediumToFastPeriodMs){
 			_st_esos_uiF14Data.b_RPGFast = TRUE;
-		else if (_st_esos_uiF14Data.RPGPeriodMs >= _st_esos_uiF14Data.u16_RPGSlowToMediumPeriodMs)
-			_st_esos_uiF14Data.b_RPGMedium = TRUE;
-		else
+		}	
+		else if (_st_esos_uiF14Data.RPGPeriodMs >= _st_esos_uiF14Data.u16_RPGSlowToMediumPeriodMs){
+		  _st_esos_uiF14Data.b_RPGMedium = TRUE;
+		}
+		else {
 			st_esos_uiF14Data.b_RPGSlow = TRUE;
+		}
 		
 		//determine CW or CCW; remember RPGA just changed
 		if ((RPGA == 0 && RPGB == 1) || (RPGA == 1 && RPGB == 0){
@@ -391,12 +398,27 @@ ESOS_USER_TASK( __esos_uiF14_task ){
 			_st_esos_uiF14Data.b_RPGCW = FALSE;
 			_st_esos_uiF14Data.b_RPGCCW = TRUE;
 		}
+		
 		//update the counter for later use in revolution calculations 
 		if (_st_esos_uiF14Data.b_RPGCW){
-			_st_esos_uiF14Data.u16_RPGCounter +=1;
+			_st_esos_uiF14Data.i16_RPGCounter +=1;
 		}
 		if (_st_esos_uiF14Data.b_RPGCCW){
-			_st_esos_uiF14Data.u16_RPGCounter -=1;
+			_st_esos_uiF14Data.i16_RPGCounter -=1;
+		}
+		if (_st_esos_uiF14Data.i16_RPGCounter == _st_esos_uiF14Data.i16_lastRPGCounter +
+												__RPGCountsPerRev){
+			_st_esos_uiF14Data.b_RPGCWRev = TRUE;
+			_st_esos_uiF14Data.i16_lastRPGCounter = _st_esos_uiF14Data.i16_RPGCounter;
+		}
+		else if (_st_esos_uiF14Data.i16_RPGCounter == _st_esos_uiF14Data.i16_lastRPGCounter -
+												__RPGCountsPerRev){
+			_st_esos_uiF14Data.b_RPGCCWRev = TRUE;
+			_st_esos_uiF14Data.i16_lastRPGCounter = _st_esos_uiF14Data.i16_RPGCounter;
+		}
+		else {
+			  _st_esos_uiF14Data.b_RPGCWRev = FALSE;
+			  _st_esos_uiF14Data.b_RPGCCWRev = FALSE;
 		}
 	}
 	else {  //reset flags after short delay to show no RPG motion
