@@ -84,11 +84,11 @@ inline BOOL esos_uiF14_isSW3DoublePressed (void) {
 //trigger LED changes, so I'm updating the LED register
 
 inline BOOL esos_uiF14_isLED1On (void) {
-    return (_st_esos_uiF14Data.b_LED1On==TRUE);
+    return (_st_esos_uiF14Data.b_LED1On);
 }
 
 inline BOOL esos_uiF14_isLED1Off (void) {
-    return (_st_esos_uiF14Data.b_LED1On==FALSE);
+    return (_st_esos_uiF14Data.b_LED1On);
 }
 
 inline void esos_uiF14_turnLED1On (void) {
@@ -115,11 +115,11 @@ inline void esos_uiF14_flashLED1( uint16_t u16_period1) {
 }
 
 inline BOOL esos_uiF14_isLED2On (void) {
-    return (_st_esos_uiF14Data.b_LED2On==TRUE);
+    return (_st_esos_uiF14Data.b_LED2On);
 }
 
 inline BOOL esos_uiF14_isLED2Off (void) {
-    return (_st_esos_uiF14Data.b_LED2On==FALSE);
+    return (_st_esos_uiF14Data.b_LED2On);
 }
 
 inline void esos_uiF14_turnLED2On (void) {
@@ -146,11 +146,11 @@ inline void esos_uiF14_flashLED2( uint16_t u16_period2) {
 }
 
 inline BOOL esos_uiF14_isLED3On (void) {
-    return (_st_esos_uiF14Data.b_LED3On==TRUE);
+    return (_st_esos_uiF14Data.b_LED3On);
 }
 
 inline BOOL esos_uiF14_isLED3Off (void) {
-    return (_st_esos_uiF14Data.b_LED3On==FALSE);
+    return (_st_esos_uiF14Data.b_LED3On);
 }
 
 inline void esos_uiF14_turnLED3On (void) {
@@ -213,31 +213,31 @@ inline uint16_t esos_uiF14_getRpgValue_u16 ( void ) {
 }
 
 inline BOOL esos_uiF14_isRpgTurning ( void ) {
-    return (esos_uiF14_getRpgVelocity_i16() != 0);
+    return !(_st_esos_uiF14Data.b_RPGNotMoving);
 }
 
 inline BOOL esos_uiF14_isRpgTurningSlow( void ) {
-  // not yet implemented
+	return _st_esos_uiF14Data.b_RPGSlow;
 }
 
 inline BOOL esos_uiF14_isRpgTurningMedium( void ) {
-  // not yet implemented
+	return _st_esos_uiF14Data.b_RPGMedium;
 }
 
 inline BOOL esos_uiF14_isRpgTurningFast( void ) {
-  // not yet implemented
+	return _st_esos_uiF14Data.b_RPGFast;
 }
 
 inline BOOL esos_uiF14_isRpgTurningCW( void ) {
-  // not yet implemented
+	return _st_esos_uiF14Data.b_RPGCW;
 }
 
 inline BOOL esos_uiF14_isRpgTurningCCW( void ) {
-  // not yet implemented
+	return _st_esos_uiF14Data.b_RPGCCW;
 }
 
-int16_t esos_uiF14_getRpgVelocity_i16( void ) {
-  // not yet implemented
+inline int16_t esos_uiF14_getRpgPeriod( void ) {
+	return _st_esos_uiF14Data.u16_RPGPeriodMs;
 }
 
 // UIF14 INITIALIZATION FUNCTION
@@ -257,8 +257,7 @@ void config_esos_uiF14() {
   CONFIG_SW3();
 
   //Step 3: setup RPG
-  CONFIG_RPGA();
-  CONFIG_RPGB();
+  CONFIG_RPG();
 
   //TODO
 

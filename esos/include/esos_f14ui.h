@@ -23,18 +23,16 @@ typedef struct {
 	uint16_t u16_doublePressLowerMs; //this can probably go away as the UI period serves as the debounce time
 	uint16_t u16_doublePressUpperMs;
     
-    BOOL b_RPGACurrent;
-    BOOL b_RPGALast;
-	BOOL b_RPGBCurrent;
-	
+    BOOL b_RPGALast;  // compared to current RPGA, used to detect rotation
+		
 	BOOL b_RPGFast;
 	BOOL b_RPGMedium;
 	BOOL b_RPGSlow;
 	BOOL b_RPGNotMoving;
 	
-	uint16_t u16_RPGLastChangeMs;
-	uint16_t u16_RPGPeriodMs;
-	uint16_t u16_RPGNotMovingToSlowPeriodMs;
+	uint16_t u16_RPGLastChangeMs;  //time of last RPGA change
+	uint16_t u16_RPGPeriodMs;      // time SINCE last RPGA change
+	uint16_t u16_RPGNotMovingToSlowPeriodMs;  //border between not moving and slow
 	uint16_t u16_RPGSlowToMediumPeriodMs;
 	uint16_t u16_RPGMediumToFastPeriodMs;
 	
@@ -43,7 +41,6 @@ typedef struct {
 		
     uint16_t u16_RPGCounter;
     uint16_t u16_lastRPGCounter;
-	uint16_t u16_countsPerRev;
 	
     BOOL b_LED1On;
     uint16_t u16_LED1FlashPeriod;    
@@ -58,6 +55,7 @@ typedef struct {
 #define __ESOS_TICKS_TO_MS(x)           (x/1)
 #define __ESOS_MS_TO_TICKS(x)           (x*1)
 #define __ESOS_UIF14_UI_PERIOD_MS       10
+#define __RPGCountsPerRev               12
 
 // PRIVATE DATA 
  
