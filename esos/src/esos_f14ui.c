@@ -415,7 +415,7 @@ ESOS_USER_TASK( __esos_uiF14_task ){
 			_st_esos_uiF14Data.b_SW2DoublePressed = TRUE;						
 			_st_esos_uiF14Data.b_SW2Pressed = FALSE;
 		} else {
-			_st_esos_uiF14Data.b_SW3nbPressed = TRUE;								
+			_st_esos_uiF14Data.b_SW3Pressed = TRUE;								
 			_st_esos_uiF14Data.b_SW3DoublePressed = FALSE;						
 			esos_ClearUserFlag(DOUBLEPRESS_SW3_TIMER_EXPIRED);						
 		}
