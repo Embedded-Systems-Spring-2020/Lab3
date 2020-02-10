@@ -15,6 +15,8 @@
 #define DOUBLE_PRESS_LOWER_BOUND_MS 120
 #define DOUBLE_PRESS_UPPER_BOUND_MS 300
 
+#define MINIMUM_LED_FLASH_PERIOD 100
+
 // PRIVATE FUNCTIONS
 inline void _esos_uiF14_setRPGCounter (uint16_t newValue) {
     _st_esos_uiF14Data.u16_RPGCounter = newValue;
@@ -110,9 +112,16 @@ inline void esos_uiF14_toggleLED1 (void) {
 }
 
 inline void esos_uiF14_flashLED1( uint16_t u16_period1) {
+	//Choose a reasonable minimum period
+	if (u16_period1 < MINIMUM_LED_FLASH_PERIOD) {
+		u16_period1 = MINIMUM_LED_FLASH_PERIOD;
+	} 
     _st_esos_uiF14Data.u16_LED1FlashPeriod = u16_period1;
-	_st_esos_uiF14Data.b_LED1Flashing = TRUE;
     return
+}
+
+inline uint16_t esos_uiF14_getLED1Period(void) {
+	return _st_esos_uiF14Data.u16_LED1FlashPeriod;
 }
 
 inline BOOL esos_uiF14_isLED2On (void) {
@@ -142,9 +151,16 @@ inline void esos_uiF14_toggleLED2 (void) {
 }
 
 inline void esos_uiF14_flashLED2( uint16_t u16_period2) {
+	//Choose a reasonable minimum period
+	if (u16_period2 < MINIMUM_LED_FLASH_PERIOD) {
+		u16_period2 = MINIMUM_LED_FLASH_PERIOD;
+	} 
     _st_esos_uiF14Data.u16_LED2FlashPeriod = u16_period2;
-	_st_esos_uiF14Data.b_LED2Flashing = TRUE;
     return
+}
+
+inline uint16_t esos_uiF14_getLED2Period(void) {
+	return _st_esos_uiF14Data.u16_LED1FlashPeriod;
 }
 
 inline BOOL esos_uiF14_isLED3On (void) {
@@ -175,9 +191,16 @@ inline void esos_uiF14_toggleLED3 (void) {
 }
 
 inline void esos_uiF14_flashLED3( uint16_t u16_period3) {
+	//Choose a reasonable minimum period
+	if (u16_period3 < MINIMUM_LED_FLASH_PERIOD) {
+		u16_period3 = MINIMUM_LED_FLASH_PERIOD;
+	} 
     _st_esos_uiF14Data.u16_LED3FlashPeriod = u16_period3;
-	_st_esos_uiF14Data.b_LED3Flashing = TRUE;
     return
+}
+
+inline uint16_t esos_uiF14_getLED3Period(void) {
+	return _st_esos_uiF14Data.u16_LED1FlashPeriod;
 }
 
 /****** RED, GREEN, and YELLOW functions *******/
@@ -279,7 +302,10 @@ ESOS_USER_TIMER(__doublepress_SW3_timer) {
 
 // UIF14 task to manage user-interface
 ESOS_USER_TASK( __esos_uiF14_task ){
-  
+  static LED1_counter = 0;
+  static LED2_counter = 0;
+  static LED3_counter = 0;
+
   ESOS_TASK_BEGIN();
   while(TRUE) {
     /* THOUGHTS ON THIS SOLUTION FOR PUSHBUTTON DOUBLE-PRESSES
@@ -292,9 +318,40 @@ ESOS_USER_TASK( __esos_uiF14_task ){
 				significant doe)
 	*/
 
+
 	//-------- LED flashing ---------
-	//This operates on the assumption that this ESOS task is called
-	//approximately every 10 ms
+	// For some reason the lab stipulates that the flashing functionality
+	// be defined WHOLLY in this task, hence the ugly stuff which follows.
+	// This operates on the assumption that this ESOS task is called
+	// approximately every 10 ms
+
+	//LEDs should not flash when their flashing period is 0
+	if (esos_uiF14_getLED1Period() == 0) {
+		LED1_counter = 0;
+	} else if (LED1_counter < esos_uiF14_getLED1Period() / 2) { //Count up to half period
+		LED1_counter += __ESOS_UIF14_UI_PERIOD_MS;
+	} else if (LED1_counter > esos_uiF14_getLED1Period() / 2) { //Toggle when greater than half period
+		esos_uiF14_toggleLED1();
+		LED1_counter = 0;
+	}
+
+	if (esos_uiF14_getLED2Period() == 0) {
+		LED2_counter = 0;
+	} else if (LED2_counter < esos_uiF14_getLED2Period() /2) {
+		LED2_counter += __ESOS_UIF14_UI_PERIOD_MS;
+	} else if (LED2_counter > esos_uiF14_getLED2Period() / 2) {
+		esos_uiF14_toggleLED2();
+		LED2_counter = 0;
+	}
+
+	if (esos_uiF14_getLED3Period() == 0) {
+		LED3_counter = 0;
+	} else if (LED3_counter < esos_uiF14_getLED3Period() / 2) {
+		LED3_counter += __ESOS_UIF14_UI_PERIOD_MS;
+	} else if (LED3_counter > esos_uiF14_getLED3Period() / 2) {
+		esos_uiF14_toggleLED3();
+		LED3_counter = 0;
+	}
 	  
 	
 	  																			// yeah im commenting past 80 chars 

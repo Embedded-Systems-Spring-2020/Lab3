@@ -43,15 +43,12 @@ typedef struct {
     uint16_t u16_lastRPGCounter;
 	
     BOOL b_LED1On;
-    BOOL b_LED1Flashing;
     uint16_t u16_LED1FlashPeriod; 
       
     BOOL b_LED2On;
-    BOOL b_LED2Flashing;
     uint16_t u16_LED2FlashPeriod;   
      
     BOOL b_LED3On;
-    BOOL b_LED3Flashing;
     uint16_t u16_LED3FlashPeriod;        
     
 } _st_esos_uiF14Data_t;
@@ -102,16 +99,19 @@ inline void esos_uiF14_turnLED1On (void);
 inline void esos_uiF14_turnLED1Off (void);
 inline void esos_uiF14_toggleLED1 (void);
 inline void esos_uiF14_flashLED1 (uint16_t);
+inline uint16_t esos_uiF14_getLED1Period(void);
 
 inline void esos_uiF14_turnLED2On (void);
 inline void esos_uiF14_turnLED2Off (void);
 inline void esos_uiF14_toggleLED2 (void);
 inline void esos_uiF14_flashLED2 (uint16_t);
+inline uint16_t esos_uiF14_getLED2Period(void);
 
 inline void esos_uiF14_turnLED3On (void);
 inline void esos_uiF14_turnLED3Off (void);
 inline void esos_uiF14_toggleLED3 (void);
 inline void esos_uiF14_flashLED3 (uint16_t);
+inline uint16_t esos_uiF14_getLED3Period(void);
 
 inline void esos_uiF14_turnRedLEDOn (void);
 inline void esos_uiF14_turnRedLEDOff (void);
