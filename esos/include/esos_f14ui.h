@@ -17,10 +17,10 @@ typedef struct {
     BOOL b_SW1Pressed;
     BOOL b_SW1DoublePressed;
     BOOL b_SW2Pressed;
-    BOOL b_SW1DoublePressed;    
+    BOOL b_SW2DoublePressed;    
     BOOL b_SW3Pressed;
-    BOOL b_SW1DoublePressed;
-	uint16_t u16_doublePressLowerMs;
+    BOOL b_SW3DoublePressed;
+	uint16_t u16_doublePressLowerMs; //this can probably go away as the UI period serves as the debounce time
 	uint16_t u16_doublePressUpperMs;
     
     BOOL b_RPGACurrent;
@@ -43,6 +43,7 @@ typedef struct {
 		
     uint16_t u16_RPGCounter;
     uint16_t u16_lastRPGCounter;
+	uint16_t u16_countsPerRev;
 	
     BOOL b_LED1On;
     uint16_t u16_LED1FlashPeriod;    
