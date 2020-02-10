@@ -236,7 +236,7 @@ buildTargetsSConscript(['BUILD_DIR'],
 def buildTargetsEsos(env, mcu, hardware_platform = 'DEFAULT_DESIGN', hardware_alias = 'default'):
     # Create an environment for building ESOS.
     env = env.Clone(MCU = mcu)
-    env.Append(CPPDEFINES = ['BUILT_ON_ESOS', 'HARDWARE_PLATFORM=' + hardware_platform],
+    env.Append(CPPDEFINES = ['NUM_UART_MODS=1', 'BUILT_ON_ESOS', 'HARDWARE_PLATFORM=' + hardware_platform],
                CPPPATH = ['esos/include', 'esos/include/pic24'])
 
     # Now, invoke a variant build using this environment.
