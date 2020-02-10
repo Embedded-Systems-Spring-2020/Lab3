@@ -15,8 +15,6 @@
 #define DOUBLE_PRESS_LOWER_BOUND_MS 120
 #define DOUBLE_PRESS_UPPER_BOUND_MS 300
 
-#define __esos_uiF14_task (10)
-
 // PRIVATE FUNCTIONS
 inline void _esos_uiF14_setRPGCounter (uint16_t newValue) {
     _st_esos_uiF14Data.u16_RPGCounter = newValue;
@@ -113,6 +111,7 @@ inline void esos_uiF14_toggleLED1 (void) {
 
 inline void esos_uiF14_flashLED1( uint16_t u16_period1) {
     _st_esos_uiF14Data.u16_LED1FlashPeriod = u16_period1;
+	_st_esos_uiF14Data.b_LED1Flashing = TRUE;
     return
 }
 
@@ -144,6 +143,7 @@ inline void esos_uiF14_toggleLED2 (void) {
 
 inline void esos_uiF14_flashLED2( uint16_t u16_period2) {
     _st_esos_uiF14Data.u16_LED2FlashPeriod = u16_period2;
+	_st_esos_uiF14Data.b_LED2Flashing = TRUE;
     return
 }
 
@@ -176,6 +176,7 @@ inline void esos_uiF14_toggleLED3 (void) {
 
 inline void esos_uiF14_flashLED3( uint16_t u16_period3) {
     _st_esos_uiF14Data.u16_LED3FlashPeriod = u16_period3;
+	_st_esos_uiF14Data.b_LED3Flashing = TRUE;
     return
 }
 
@@ -261,9 +262,6 @@ void config_esos_uiF14() {
   //Step 3: setup RPG
   CONFIG_RPG();
 
-  //TODO
-
-
   esos_RegisterTask( __uiF14_task );
 }
 
@@ -293,6 +291,10 @@ ESOS_USER_TASK( __esos_uiF14_task ){
 			MIGHT introduce latency to our main loop, which is bad (probably not
 				significant doe)
 	*/
+
+	//-------- LED flashing ---------
+	//This operates on the assumption that this ESOS task is called
+	//approximately every 10 ms
 	  
 	
 	  																			// yeah im commenting past 80 chars 
@@ -409,7 +411,7 @@ ESOS_USER_TASK( __esos_uiF14_task ){
 	
 	
 	
-    ESOS_TASK_WAIT_TICKS( __ESOS_UIF14_UI_PERIOD );
+    ESOS_TASK_WAIT_TICKS( __ESOS_UIF14_UI_PERIOD_MS );
   }
   ESOS_TASK_END();
 }

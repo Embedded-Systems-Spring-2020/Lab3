@@ -46,10 +46,15 @@ typedef struct {
 	uint16_t u16_countsPerRev;
 	
     BOOL b_LED1On;
-    uint16_t u16_LED1FlashPeriod;    
+    BOOL b_LED1Flashing;
+    uint16_t u16_LED1FlashPeriod; 
+      
     BOOL b_LED2On;
-    uint16_t u16_LED2FlashPeriod;        
+    BOOL b_LED2Flashing;
+    uint16_t u16_LED2FlashPeriod;   
+     
     BOOL b_LED3On;
+    BOOL b_LED3Flashing;
     uint16_t u16_LED3FlashPeriod;        
     
 } _st_esos_uiF14Data_t;
