@@ -160,7 +160,7 @@ inline void esos_uiF14_flashLED2( uint16_t u16_period2) {
 }
 
 inline uint16_t esos_uiF14_getLED2Period(void) {
-	return _st_esos_uiF14Data.u16_LED1FlashPeriod;
+	return _st_esos_uiF14Data.u16_LED2FlashPeriod;
 }
 
 inline BOOL esos_uiF14_isLED3On (void) {
@@ -200,7 +200,7 @@ inline void esos_uiF14_flashLED3( uint16_t u16_period3) {
 }
 
 inline uint16_t esos_uiF14_getLED3Period(void) {
-	return _st_esos_uiF14Data.u16_LED1FlashPeriod;
+	return _st_esos_uiF14Data.u16_LED3FlashPeriod;
 }
 
 /****** RED, GREEN, and YELLOW functions *******/
