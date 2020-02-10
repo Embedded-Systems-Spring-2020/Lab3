@@ -409,11 +409,11 @@ ESOS_USER_TASK( __esos_uiF14_task ){
 		esos_RegisterTimer(__doublepress_SW3_timer, DOUBLE_PRESS_UPPER_BOUND_MS);
 		ESOS_TASK_WAIT_UNTIL(													
 			esos_IsUserFlagSet(DOUBLEPRESS_SW3_TIMER_EXPIRED) || 				
-			SW2_PRESSED															
+			SW3_PRESSED															
 		);				
 		if (!esos_IsUserFlagSet(DOUBLEPRESS_SW3_TIMER_EXPIRED)) {				
-			_st_esos_uiF14Data.b_SW2DoublePressed = TRUE;						
-			_st_esos_uiF14Data.b_SW2Pressed = FALSE;
+			_st_esos_uiF14Data.b_SW3DoublePressed = TRUE;						
+			_st_esos_uiF14Data.b_SW3Pressed = FALSE;
 		} else {
 			_st_esos_uiF14Data.b_SW3Pressed = TRUE;								
 			_st_esos_uiF14Data.b_SW3DoublePressed = FALSE;						
