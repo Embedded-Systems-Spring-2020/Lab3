@@ -11,8 +11,7 @@
 #include "revF14.h"
 #include "dataXfer.h" //this is the library that uses the uc/pc variable on the bootloader
 
- enum { u16_DOUBLE_PRESS_LOWER_MS_NDX, // the variables that will be displayed on uc/pc variable tab
-		u16_DOUBLE_PRESS_UPPER_MS_NDX, 
+ enum { u16_DOUBLE_PRESS_UPPER_MS_NDX, // the variables that will be displayed on uc/pc variable tab
 		u16_RPG_MEDIUM_MS_NDX, 
 		u16_RPG_FAST_MS_NDX,
 		u16_RPG_PERIOD_NDX,
@@ -22,7 +21,6 @@ ESOS_USER_TASK(drawDisplay) {
     ESOS_TASK_BEGIN();
 		initDataXfer(); 
 		//format for below... var name from enum above, actual var name, T/F changeable, label
-		SPECIFY_VAR(u16_DOUBLE_PRESS_LOWER_MS_NDX, _st_esos_uiF14Data.u16_doublePressLowerMs, TRUE, "%u", "Lower double press time limit");
 		SPECIFY_VAR(u16_DOUBLE_PRESS_UPPER_MS_NDX, _st_esos_uiF14Data.u16_doublePressUpperMs, TRUE, "%u", "Upper double press time limit");
 		SPECIFY_VAR(u16_RPG_MEDIUM_MS_NDX, _st_esos_uiF14Data.u16_RPGMediumMs, TRUE, "%u", "Time in ms between RPG clicks -slow to medium");
 		SPECIFY_VAR(u16_RPG_FAST_MS_NDX, _st_esos_uiF14Data.u16_RPGFastMs, TRUE, "%u", "Time in ms between RPG clicks -medium to fast");
