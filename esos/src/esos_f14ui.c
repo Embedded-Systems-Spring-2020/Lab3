@@ -15,6 +15,8 @@
 #define DOUBLE_PRESS_LOWER_BOUND_MS 120
 #define DOUBLE_PRESS_UPPER_BOUND_MS 300
 
+#define __esos_uiF14_task (10)
+
 // PRIVATE FUNCTIONS
 inline void _esos_uiF14_setRPGCounter (uint16_t newValue) {
     _st_esos_uiF14Data.u16_RPGCounter = newValue;
