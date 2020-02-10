@@ -20,7 +20,6 @@ typedef struct {
     BOOL b_SW2DoublePressed;    
     BOOL b_SW3Pressed;
     BOOL b_SW3DoublePressed;
-	uint16_t u16_doublePressLowerMs; //this can probably go away as the UI period serves as the debounce time
 	uint16_t u16_doublePressUpperMs;
     
     BOOL b_RPGALast;  // compared to current RPGA, used to detect rotation

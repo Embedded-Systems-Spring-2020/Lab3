@@ -249,7 +249,43 @@ inline uint16_t esos_uiF14_getRpgPeriod( void ) {
 // UIF14 INITIALIZATION FUNCTION
 
 void config_esos_uiF14() {
-  // setup your UI implementation
+	
+    _st_esos_uiF14Data.b_SW1Pressed = FALSE;
+    _st_esos_uiF14Data.b_SW1DoublePressed = FALSE;
+    _st_esos_uiF14Data.b_SW2Pressed = FALSE;
+    _st_esos_uiF14Data.b_SW2DoublePressed = FALSE;    
+    _st_esos_uiF14Data.b_SW3Pressed = FALSE;
+    _st_esos_uiF14Data.b_SW3DoublePressed = FALSE;
+	_st_esos_uiF14Data.u16_doublePressUpperMs = 250;
+    
+    _st_esos_uiF14Data.b_RPGALast;  // compared to current RPGA, used to detect rotation
+	_st_esos_uiF14Data.b_RPGFast = FALSE;
+	_st_esos_uiF14Data.b_RPGMedium = FALSE;
+	_st_esos_uiF14Data.b_RPGSlow = FALSE;
+	_st_esos_uiF14Data.b_RPGNotMoving = TRUE;
+	_st_esos_uiF14Data.u16_RPGLastChangeMs = 0;  //time of last RPGA change
+	_st_esos_uiF14Data.u16_RPGPeriodMs = 0;      // time SINCE last RPGA change
+	_st_esos_uiF14Data.u16_RPGNotMovingToSlowPeriodMs = 300;  //border between not moving and slow
+	_st_esos_uiF14Data.u16_RPGSlowToMediumPeriodMs = 200;
+	_st_esos_uiF14Data.u16_RPGMediumToFastPeriodMs = 100;
+	_st_esos_uiF14Data.b_RPGCW = FALSE;
+    _st_esos_uiF14Data.b_RPGCCW = FALSE;
+	_st_esos_uiF14Data.i16_RPGCounter = 0;      // notice signed int for couting CCW from start
+    _st_esos_uiF14Data.i16_lastRPGCounter = 0;
+	_st_esos_uiF14Data.b_RPGCWRev = FALSE;
+	_st_esos_uiF14Data.b_RPGCCWRev = FALSE;
+	
+    _st_esos_uiF14Data.b_LED1On = FALSE;
+    _st_esos_uiF14Data.b_LED1Flashing = FALSE;
+    _st_esos_uiF14Data.u16_LED1FlashPeriod = FALSE; 
+      
+    _st_esos_uiF14Data.b_LED2On = FALSE;
+    _st_esos_uiF14Data.b_LED2Flashing = FALSE;
+    _st_esos_uiF14Data.u16_LED2FlashPeriod = FALSE;   
+     
+    _st_esos_uiF14Data.b_LED3On = FALSE;
+    _st_esos_uiF14Data.b_LED3Flashing = FALSE;
+    _st_esos_uiF14Data.u16_LED3FlashPeriod = FALSE;
 
   //Step 1: setup LEDs
   //
