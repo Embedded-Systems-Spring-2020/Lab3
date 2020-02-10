@@ -303,7 +303,6 @@ ESOS_USER_TASK( __esos_uiF14_task ){
 	  																			// yeah im commenting past 80 chars 
 	// SW1_PRESSED																// what are you gonna do about it
 	if (SW1_PRESSED) {															//	hopefully not dock points uhhh
-		ESOS_TASK_WAIT_TICKS(DOUBLE_PRESS_LOWER_BOUND_MS);						// Wait a small amount of time
 		esos_RegisterTimer(__doublepress_SW1_timer, DOUBLE_PRESS_UPPER_BOUND_MS);	// start timer
 		ESOS_TASK_WAIT_UNTIL(													
 			esos_IsUserFlagSet(DOUBLEPRESS_SW1_TIMER_EXPIRED) || 					// Funky identation to keep code 
@@ -322,7 +321,6 @@ ESOS_USER_TASK( __esos_uiF14_task ){
 
 	// SW2_PRESSED
 	if (SW2_PRESSED) {															
-		ESOS_TASK_WAIT_TICKS(DOUBLE_PRESS_LOWER_BOUND_MS);						
 		esos_RegisterTimer(__doublepress_SW2_timer, DOUBLE_PRESS_UPPER_BOUND_MS);
 		ESOS_TASK_WAIT_UNTIL(													
 			esos_IsUserFlagSet(DOUBLEPRESS_SW2_TIMER_EXPIRED) || 				
@@ -341,7 +339,6 @@ ESOS_USER_TASK( __esos_uiF14_task ){
 
 	// SW3_PRESSED
 	if (SW3_PRESSED) {															
-		ESOS_TASK_WAIT_TICKS(DOUBLE_PRESS_LOWER_BOUND_MS);						
 		esos_RegisterTimer(__doublepress_SW3_timer, DOUBLE_PRESS_UPPER_BOUND_MS);
 		ESOS_TASK_WAIT_UNTIL(													
 			esos_IsUserFlagSet(DOUBLEPRESS_SW3_TIMER_EXPIRED) || 				
