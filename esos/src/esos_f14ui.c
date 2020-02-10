@@ -321,6 +321,16 @@ ESOS_USER_TASK( __esos_uiF14_task ){
 				significant doe)
 	*/
 
+	//-------- LED Initial States
+	// LED1 (Red) 
+	LED1 = _st_esos_uiF14Data.b_LED1On;
+
+	// LED2 (Yellow) 
+	LED2 = _st_esos_uiF14Data.b_LED2On;
+
+	// LED3 (Green)    
+	LED3 = _st_esos_uiF14Data.b_LED3On;
+
 
 	//-------- LED flashing ---------
 	// For some reason the lab stipulates that the flashing functionality
@@ -411,18 +421,6 @@ ESOS_USER_TASK( __esos_uiF14_task ){
 		}
 		esos_UnregisterTimer(__doublepress_SW3_timer);								
 	}	
-		
-	// LED1 (Red) 
-	LED1 = _st_esos_uiF14Data.b_LED1On;
-	//_st_esos_uiF14Data.u16_LED1FlashPeriod;    
-
-	// LED2 (Yellow) 
-	LED2 = _st_esos_uiF14Data.b_LED2On;
-	//_st_esos_uiF14Data.u16_LED2FlashPeriod;    
-
-	// LED3 (Green)    
-	LED3 = _st_esos_uiF14Data.b_LED3On;
-	//_st_esos_uiF14Data.u16_LED3FlashPeriod;        
 	
 	//+++++++++++++++RPG++++++++++++++++++++
 	//determines if RPG is moving
