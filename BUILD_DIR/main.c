@@ -9,7 +9,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "revF14.h"
-#include "dataXfer.h" //this is the library that uses the uc/pc variable on the bootloader
+#include <dataXfer.h> //this is the library that uses the uc/pc variable on the bootloader
 
  enum { u16_DOUBLE_PRESS_UPPER_MS_NDX, // the variables that will be displayed on uc/pc variable tab
 		u16_RPG_SLOW_MS_NDX,
