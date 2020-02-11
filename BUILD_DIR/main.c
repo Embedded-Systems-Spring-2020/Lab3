@@ -34,17 +34,17 @@ ESOS_USER_TASK(drawDisplay) {
 			if (esos_uiF14_isSW1Pressed()){outString("\nSw1 is Pushed  ");}
 			if (esos_uiF14_isSW1Released()){outString("Sw1 is Released");}
 			if (esos_uiF14_isSW1DoublePressed()){outString("Sw1 is Double Pressed\n");
-				ESOS_TASK_WAIT_TICKS(750);
+				ESOS_TASK_WAIT_TICKS(300);
 			} else {outString("Sw1 is NOT Double Pressed\n");}
 			if (esos_uiF14_isSW2Pressed()){outString("Sw2 is Pushed  ");}
 			if (esos_uiF14_isSW2Released()){outString("Sw2 is Released");}
 			if (esos_uiF14_isSW2DoublePressed()){outString("Sw2 is Double Pressed\n");
-				ESOS_TASK_WAIT_TICKS(500);
+				ESOS_TASK_WAIT_TICKS(300);
 			} else {outString("Sw2 is NOT Double Pressed\n");}
 			if (esos_uiF14_isSW3Pressed()){outString("Sw3 is Pushed  ");}
 			if (esos_uiF14_isSW3Released()){outString("Sw3 is Released");}
 			if (esos_uiF14_isSW3DoublePressed()){outString("Sw3 is Double Pressed\n\n");
-				ESOS_TASK_WAIT_TICKS(5000);
+				ESOS_TASK_WAIT_TICKS(300);
 			} else {outString("Sw3 is NOT Double Pressed\n\n");}
 
 			if (esos_uiF14_isRPGTurning()) {
