@@ -27,7 +27,7 @@ ESOS_USER_TASK(drawDisplay) {
 		SPECIFY_VAR(u16_RPG_MEDIUM_MS_NDX, _st_esos_uiF14Data.u16_RPGSlowToMediumPeriodMs, TRUE, "%u", "Time in ms between RPG clicks -slow to medium");
 		SPECIFY_VAR(u16_RPG_FAST_MS_NDX, _st_esos_uiF14Data.u16_RPGMediumToFastPeriodMs, TRUE, "%u", "Time in ms between RPG clicks -medium to fast");
 		SPECIFY_VAR(u16_RPG_PERIOD_NDX, _st_esos_uiF14Data.u16_RPGPeriodMs, FALSE, "%u", "Time between clicks in ms");
-		SPECIFY_VAR(U16_RPG_VALUE_NDX, _st_esos_uiF14Data.u16_RPGCounter, FALSE, "%u", "Current RPG Counter");	
+		SPECIFY_VAR(U16_RPG_VALUE_NDX, _st_esos_uiF14Data.i16_RPGCounter, FALSE, "%u", "Current RPG Counter");	
 		while(1){
 			if (esos_uiF14_isSW1Pressed()){outString("\nSw1 is Pushed  ");}
 			if (esos_uiF14_isSW1Released()){outString("Sw1 is Released");}
@@ -47,9 +47,11 @@ ESOS_USER_TASK(drawDisplay) {
 			if (esos_uiF14_isRpgTurning()){outString("RPG is Turning ");
 				if (esos_uiF14_isRpgTurningCW()){outString("CW ");}
 				else {outString("CCW");}
-				if esos_uiF14_isRpgTurningSlow()){outString(" Slowly\n");}
+				if (esos_uiF14_isRpgTurningSlow()){outString(" Slowly\n");
+				}
 				else if (esos_uiF14_isRpgTurningMedium()){outString(" Mediumly\n");}
 				else (esos_uiF14_isRpgTurningFast()){outString(" Fastly\n");}
+			}
 			else {outString("RPG is Not Turning");}
 			ESOS_TASK_WAIT_TICKS(50);
 			outString("\n\n\n\n/n/n/n/n");
