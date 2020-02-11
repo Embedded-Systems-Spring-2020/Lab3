@@ -50,7 +50,7 @@ ESOS_USER_TASK(drawDisplay) {
 				else (esos_uiF14_isRpgTurningFast()){outString(" Fastly\n");}
 			else {outString("RPG is Not Turning");}
 			ESOS_TASK_WAIT_TICKS(50);
-			outString("\n\n\n\n");
+			outString("\n\n\n\n/n/n/n/n");
 		}
 	ESOS_TASK_END();
 }
