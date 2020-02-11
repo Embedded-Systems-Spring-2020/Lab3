@@ -35,28 +35,39 @@ ESOS_USER_TASK(drawDisplay) {
 			if (esos_uiF14_isSW1Released()){outString("Sw1 is Released");}
 			if (esos_uiF14_isSW1DoublePressed()){outString("Sw1 is Double Pressed\n");
 				ESOS_TASK_WAIT_TICKS(750);
-			}else {outString("Sw1 is NOT Double Pressed\n");}
+			} else {outString("Sw1 is NOT Double Pressed\n");}
 			if (esos_uiF14_isSW2Pressed()){outString("Sw2 is Pushed  ");}
 			if (esos_uiF14_isSW2Released()){outString("Sw2 is Released");}
 			if (esos_uiF14_isSW2DoublePressed()){outString("Sw2 is Double Pressed\n");
 				ESOS_TASK_WAIT_TICKS(500);
-			}else {outString("Sw2 is NOT Double Pressed\n");}
+			} else {outString("Sw2 is NOT Double Pressed\n");}
 			if (esos_uiF14_isSW3Pressed()){outString("Sw3 is Pushed  ");}
 			if (esos_uiF14_isSW3Released()){outString("Sw3 is Released");}
 			if (esos_uiF14_isSW3DoublePressed()){outString("Sw3 is Double Pressed\n\n");
 				ESOS_TASK_WAIT_TICKS(5000);
-			}else {outString("Sw3 is NOT Double Pressed\n\n");}
-			if (esos_uiF14_isRPGTurning()){outString("RPG is Turning ");
-				if (esos_uiF14_isRPGTurningCW()){outString("CW ");}
-				else {outString("CCW");}
-				if (esos_uiF14_isRPGTurningSlow()){outString(" Slowly\n");
+			} else {outString("Sw3 is NOT Double Pressed\n\n");}
+
+			if (esos_uiF14_isRPGTurning()) {
+				
+				outString("RPG is Turning ");
+				if (esos_uiF14_isRPGTurningCW()) { 
+					outString("CW ");
+				} else {
+					outString("CCW");
 				}
-				else if (esos_uiF14_isRPGTurningMedium()){outString(" Mediumly\n");}
-				else (esos_uiF14_isRPGTurningFast()){outString(" Fastly\n");}
+
+				if (esos_uiF14_isRPGTurningSlow()) {
+					outString(" Slowly\n");
+				} else if (esos_uiF14_isRPGTurningMedium()) {
+					outString(" Mediumly\n");
+				} else (esos_uiF14_isRPGTurningFast()) { 
+					outString(" Fastly\n");
+				}
+			} else {
+				outString("RPG is Not Turning");
 			}
-			else {outString("RPG is Not Turning");}
 			ESOS_TASK_WAIT_TICKS(50);
-			outString("\n\n\n\n/n/n/n/n");
+			outString("\n\n\n\n\n\n\n\n");
 		}
 	ESOS_TASK_END();
 }
