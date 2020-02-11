@@ -8,6 +8,8 @@
 #include "esos_f14ui.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include "pic24_util.h"
+#include "pic24_serial.h"
 #include "revF14.h"
 #include <dataXfer.h> //this is the library that uses the uc/pc variable on the bootloader
 
