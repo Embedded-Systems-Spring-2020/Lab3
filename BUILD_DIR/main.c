@@ -46,13 +46,13 @@ ESOS_USER_TASK(drawDisplay) {
 			if (esos_uiF14_isSW3DoublePressed()){outString("Sw3 is Double Pressed\n\n");
 				ESOS_TASK_WAIT_TICKS(5000);
 			}else {outString("Sw3 is NOT Double Pressed\n\n");}
-			if (esos_uiF14_isRpgTurning()){outString("RPG is Turning ");
-				if (esos_uiF14_isRpgTurningCW()){outString("CW ");}
+			if (esos_uiF14_isRPGTurning()){outString("RPG is Turning ");
+				if (esos_uiF14_isRPGTurningCW()){outString("CW ");}
 				else {outString("CCW");}
-				if (esos_uiF14_isRpgTurningSlow()){outString(" Slowly\n");
+				if (esos_uiF14_isRPGTurningSlow()){outString(" Slowly\n");
 				}
-				else if (esos_uiF14_isRpgTurningMedium()){outString(" Mediumly\n");}
-				else (esos_uiF14_isRpgTurningFast()){outString(" Fastly\n");}
+				else if (esos_uiF14_isRPGTurningMedium()){outString(" Mediumly\n");}
+				else (esos_uiF14_isRPGTurningFast()){outString(" Fastly\n");}
 			}
 			else {outString("RPG is Not Turning");}
 			ESOS_TASK_WAIT_TICKS(50);
