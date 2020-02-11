@@ -63,11 +63,11 @@ _st_esos_uiF14Data_t _st_esos_uiF14Data;
 // PRIVATE FUNCTION PROTOTYPES
 
 inline void _esos_uiF14_setRPGCounter (int16_t);
-inline int16_t -esos_uiF14_getLastRPGCounter (void);
+inline int16_t _esos_uiF14_getLastRPGCounter (void);
 inline void _esos_uiF14_setLastRPGCounter (int16_t);
 inline uint16_t _esos_uiF14_getRPGPeriod (void);
 
-ESOS_USER_TASK __uiF14_task;
+// ESOS_USER_TASK __uiF14_task;
 
 // PUBLIC API FUNCTION PROTOTYPES
 
@@ -123,25 +123,25 @@ void config_esos_uiF14();
 
 #define ESOS_TASK_WAIT_UNTIL_UIF14_SW1_PRESSED()              ESOS_TASK_WAIT_UNTIL( esos_uiF14_isSW1Pressed() )
 #define ESOS_TASK_WAIT_UNTIL_UIF14_SW1_RELEASED()             ESOS_TASK_WAIT_UNTIL( esos_uiF14_isSW1Released() )
-#define ESOS_TASK_WAIT_UNTIL_UIF14_SW1_PRESSED_AND_RELEASED() do {            /
-                            ESOS_TASK_WAIT_UNTIL_UIF14_SW1_PRESSED();           /
-                            ESOS_TASK_WAIT_UNTIL_UIF14_SW1_RELEASED();          /
+#define ESOS_TASK_WAIT_UNTIL_UIF14_SW1_PRESSED_AND_RELEASED() do {            \
+                            ESOS_TASK_WAIT_UNTIL_UIF14_SW1_PRESSED();           \
+                            ESOS_TASK_WAIT_UNTIL_UIF14_SW1_RELEASED();          \
                           } while (0);
 #define ESOS_TASK_WAIT_UNTIL_UIF14_SW1_DOUBLE_PRESSED()       ESOS_TASK_WAIT_UNTIL( esos_uiF14_isSW1DoublePressed() )
 
 #define ESOS_TASK_WAIT_UNTIL_UIF14_SW2_PRESSED()              ESOS_TASK_WAIT_UNTIL( esos_uiF14_isSW2Pressed() )
 #define ESOS_TASK_WAIT_UNTIL_UIF14_SW2_RELEASED()             ESOS_TASK_WAIT_UNTIL( esos_uiF14_isSW2Released() )
-#define ESOS_TASK_WAIT_UNTIL_UIF14_SW2_PRESSED_AND_RELEASED() do {    /
-                            ESOS_TASK_WAIT_UNTIL_UIF14_SW2_PRESSED(); /
-                            ESOS_TASK_WAIT_UNTIL_UIF14_SW2_RELEASED(); /
+#define ESOS_TASK_WAIT_UNTIL_UIF14_SW2_PRESSED_AND_RELEASED() do {    \
+                            ESOS_TASK_WAIT_UNTIL_UIF14_SW2_PRESSED(); \
+                            ESOS_TASK_WAIT_UNTIL_UIF14_SW2_RELEASED(); \
                           } while (0);
 #define ESOS_TASK_WAIT_UNTIL_UIF14_SW2_DOUBLE_PRESSED()       ESOS_TASK_WAIT_UNTIL( esos_uiF14_isSW2DoublePressed() )
 
 #define ESOS_TASK_WAIT_UNTIL_UIF14_SW3_PRESSED()              ESOS_TASK_WAIT_UNTIL( esos_uiF14_isSW3Pressed() )
 #define ESOS_TASK_WAIT_UNTIL_UIF14_SW3_RELEASED()             ESOS_TASK_WAIT_UNTIL( esos_uiF14_isSW3Released() )
-#define ESOS_TASK_WAIT_UNTIL_UIF14_SW3_PRESSED_AND_RELEASED()  do {    /
-                            ESOS_TASK_WAIT_UNTIL_UIF14_SW3_PRESSED(); /
-                            ESOS_TASK_WAIT_UNTIL_UIF14_SW3_RELEASED(); /
+#define ESOS_TASK_WAIT_UNTIL_UIF14_SW3_PRESSED_AND_RELEASED()  do {    \
+                            ESOS_TASK_WAIT_UNTIL_UIF14_SW3_PRESSED(); \
+                            ESOS_TASK_WAIT_UNTIL_UIF14_SW3_RELEASED(); \
                           } while (0);
 #define ESOS_TASK_WAIT_UNTIL_UIF14_SW3_DOUBLE_PRESSED()       ESOS_TASK_WAIT_UNTIL( esos_uiF14_isSW3DoublePressed() )
 
@@ -154,24 +154,24 @@ void config_esos_uiF14();
 #define ESOS_TASK_WAIT_UNTIL_UIF14_RPG_TURNS_FAST()           ESOS_TASK_WAIT_UNTIL( esos_uiF14_isRPGTurningFast() )
 #define ESOS_TASK_WAIT_UNTIL_UIF14_RPG_TURNS_FAST_CW()        ESOS_TASK_WAIT_UNTIL( esos_uiF14_isRPGTurningFast() && esos_uiF14_isRPGTurningCW() )
 #define ESOS_TASK_WAIT_UNTIL_UIF14_RPG_TURNS_FAST_CCW()       ESOS_TASK_WAIT_UNTIL( esos_uiF14_isRPGTurningFast() && esos_uiF14_isRPGTurningCCW() )
-#define ESOS_TASK_WAIT_UNTIL_UIF14_RPG_MAKES_REV(uint16_t u16_numTurns)   do {
-							int i = 0;
-							for (i, i < u16_numTurns, i++){
-								ESOS_TASK_WAIT_UNTIL( _st_esos_uiF14Data.b_RPGCWRev || _st_esos_uiF14Data.b_RPGCCWRev);
-							}
-						  } while (0);
-#define ESOS_TASK_WAIT_UNTIL_UIF14_RPG_MAKES_CW_REV(uint16_t u16_numTurns)   do {
-							int i = 0;
-							for (i, i < u16_numTurns, i++){
-								ESOS_TASK_WAIT_UNTIL( _st_esos_uiF14Data.b_RPGCWRev);
-							}
-						  } while (0); 
-#define ESOS_TASK_WAIT_UNTIL_UIF14_RPG_MAKES_CCW_REV(uint16_t u16_numTurns)   do {
-							int j = 0;
-							for (j, j < u16_numTurns, j++){
-								ESOS_TASK_WAIT_UNTIL( _st_esos_uiF14Data.b_RPGCCWRev);
-							}
-						  } while (0);
+#define ESOS_TASK_WAIT_UNTIL_UIF14_RPG_MAKES_REV(uint16_t u16_numTurns)   do {    \
+							int i = 0;                                            \
+							for (i, i < u16_numTurns, i++){                       \
+								ESOS_TASK_WAIT_UNTIL( _st_esos_uiF14Data.b_RPGCWRev || _st_esos_uiF14Data.b_RPGCCWRev);    \
+							}                                                     \
+						  } while (0);                                            \
+#define ESOS_TASK_WAIT_UNTIL_UIF14_RPG_MAKES_CW_REV(uint16_t u16_numTurns)   do { \
+							int i = 0;                                            \
+							for (i, i < u16_numTurns, i++){                       \
+								ESOS_TASK_WAIT_UNTIL( _st_esos_uiF14Data.b_RPGCWRev);   \
+							}                                                     \
+						  } while (0);                                            \
+#define ESOS_TASK_WAIT_UNTIL_UIF14_RPG_MAKES_CCW_REV(uint16_t u16_numTurns)   do {  \
+							int j = 0;                                              \
+							for (j, j < u16_numTurns, j++){                         \
+								ESOS_TASK_WAIT_UNTIL( _st_esos_uiF14Data.b_RPGCCWRev);  \
+							}                                                       \
+						  } while (0);                                              \
 
 
 #endif    // ESOS_UIF14_H
