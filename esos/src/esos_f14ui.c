@@ -313,18 +313,6 @@ void config_esos_uiF14() {
   esos_RegisterTask( __uiF14_task );
 }
 
-ESOS_USER_TIMER(__doublepress_SW1_timer) {
-	esos_SetUserFlag(DOUBLEPRESS_SW1_TIMER_EXPIRED);
-}
-
-ESOS_USER_TIMER(__doublepress_SW2_timer) {
-	esos_SetUserFlag(DOUBLEPRESS_SW2_TIMER_EXPIRED);
-}
-
-ESOS_USER_TIMER(__doublepress_SW3_timer) {
-	esos_SetUserFlag(DOUBLEPRESS_SW3_TIMER_EXPIRED);
-}
-
 // UIF14 task to manage user-interface
 ESOS_USER_TASK( __esos_uiF14_task ){
   static LED1_counter = 0;
