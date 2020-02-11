@@ -154,24 +154,24 @@ void config_esos_uiF14();
 #define ESOS_TASK_WAIT_UNTIL_UIF14_RPG_TURNS_FAST()           ESOS_TASK_WAIT_UNTIL( esos_uiF14_isRPGTurningFast() )
 #define ESOS_TASK_WAIT_UNTIL_UIF14_RPG_TURNS_FAST_CW()        ESOS_TASK_WAIT_UNTIL( esos_uiF14_isRPGTurningFast() && esos_uiF14_isRPGTurningCW() )
 #define ESOS_TASK_WAIT_UNTIL_UIF14_RPG_TURNS_FAST_CCW()       ESOS_TASK_WAIT_UNTIL( esos_uiF14_isRPGTurningFast() && esos_uiF14_isRPGTurningCCW() )
-#define ESOS_TASK_WAIT_UNTIL_UIF14_RPG_MAKES_REV(uint16_t u16_numTurns)   do {    \
+#define ESOS_TASK_WAIT_UNTIL_UIF14_RPG_MAKES_REV(u16_numTurns)   do {    \
 							int i = 0;                                            \
 							for (i, i < u16_numTurns, i++){                       \
 								ESOS_TASK_WAIT_UNTIL( _st_esos_uiF14Data.b_RPGCWRev || _st_esos_uiF14Data.b_RPGCCWRev);    \
 							}                                                     \
-						  } while (0);                                            \
-#define ESOS_TASK_WAIT_UNTIL_UIF14_RPG_MAKES_CW_REV(uint16_t u16_numTurns)   do { \
+						  } while (0);                                            
+#define ESOS_TASK_WAIT_UNTIL_UIF14_RPG_MAKES_CW_REV(u16_numTurns)   do { \
 							int i = 0;                                            \
 							for (i, i < u16_numTurns, i++){                       \
 								ESOS_TASK_WAIT_UNTIL( _st_esos_uiF14Data.b_RPGCWRev);   \
 							}                                                     \
-						  } while (0);                                            \
-#define ESOS_TASK_WAIT_UNTIL_UIF14_RPG_MAKES_CCW_REV(uint16_t u16_numTurns)   do {  \
+						  } while (0);                                            
+#define ESOS_TASK_WAIT_UNTIL_UIF14_RPG_MAKES_CCW_REV(u16_numTurns)   do {  \
 							int j = 0;                                              \
 							for (j, j < u16_numTurns, j++){                         \
 								ESOS_TASK_WAIT_UNTIL( _st_esos_uiF14Data.b_RPGCCWRev);  \
 							}                                                       \
-						  } while (0);                                              \
+						  } while (0);                                              
 
 
 #endif    // ESOS_UIF14_H
