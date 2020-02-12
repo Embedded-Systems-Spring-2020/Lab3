@@ -10,7 +10,7 @@
 
 #define MINIMUM_LED_FLASH_PERIOD 100
 
-#define DOUBLE_PRESS_UPPER_BOUND_TICKS = 25
+
 
 // PRIVATE FUNCTIONS
 inline void _esos_uiF14_setRPGCounter (int16_t i16_newValue) {
@@ -385,13 +385,13 @@ ESOS_USER_TASK( __esos_uiF14_task ){
 	}
 
 	/* SWITCH STATE LOGIC */
-	if (SW1_PRESSED || SW1_doublepress_counter >= DOUBLE_PRESS_UPPER_BOUND_TICKS) {
-		if (SW1_doublepress_counter >= DOUBLE_PRESS_UPPER_BOUND_TICKS) {						
+	if (SW1_PRESSED || SW1_doublepress_counter >= _st_esos_uiF14Data.u16_doublePressUpperMs) {
+		if (SW1_doublepress_counter >= _st_esos_uiF14Data.u16_doublePressUpperMs) {						
 			SW1_doublepress_counter = -1;		// Counter expired, no double press event, disable counter
 			_st_esos_uiF14Data.b_SW1DoublePressed = FALSE;
 			_st_esos_uiF14Data.b_SW1Pressed = TRUE;
 		// Switch was pressed while counter was running and not expired
-		} else if (SW1_doublepress_counter < DOUBLE_PRESS_UPPER_BOUND_TICKS && SW1_doublepress_counter != -1) {
+		} else if (SW1_doublepress_counter < _st_esos_uiF14Data.u16_doublePressUpperMs && SW1_doublepress_counter != -1) {
 			_st_esos_uiF14Data.b_SW1DoublePressed = TRUE;
 			_st_esos_uiF14Data.b_SW1Pressed = FALSE;
 		// Otherwise, the switch was pressed, start the timer
@@ -400,13 +400,13 @@ ESOS_USER_TASK( __esos_uiF14_task ){
 		}
 	}
 
-	if (SW2_PRESSED || SW2_doublepress_counter >= DOUBLE_PRESS_UPPER_BOUND_TICKS) {
-		if (SW2_doublepress_counter >= DOUBLE_PRESS_UPPER_BOUND_TICKS) {						
+	if (SW2_PRESSED || SW2_doublepress_counter >= _st_esos_uiF14Data.u16_doublePressUpperMs) {
+		if (SW2_doublepress_counter >= _st_esos_uiF14Data.u16_doublePressUpperMs) {						
 			SW2_doublepress_counter = -1;		// Counter expired, no double press event, disable counter
 			_st_esos_uiF14Data.b_SW2DoublePressed = FALSE;
 			_st_esos_uiF14Data.b_SW2Pressed = TRUE;
 		// Switch was pressed while counter was running and not expired
-		} else if (SW2_doublepress_counter < DOUBLE_PRESS_UPPER_BOUND_TICKS && SW2_doublepress_counter != -1) {
+		} else if (SW2_doublepress_counter < _st_esos_uiF14Data.u16_doublePressUpperMs && SW2_doublepress_counter != -1) {
 			_st_esos_uiF14Data.b_SW2DoublePressed = TRUE;
 			_st_esos_uiF14Data.b_SW2Pressed = FALSE;
 		// Otherwise, the switch was pressed, start the timer
@@ -415,13 +415,13 @@ ESOS_USER_TASK( __esos_uiF14_task ){
 		}
 	}
 
-	if (SW3_PRESSED || SW3_doublepress_counter >= DOUBLE_PRESS_UPPER_BOUND_TICKS) {
-		if (SW3_doublepress_counter >= DOUBLE_PRESS_UPPER_BOUND_TICKS) {						
+	if (SW3_PRESSED || SW3_doublepress_counter >= _st_esos_uiF14Data.u16_doublePressUpperMs) {
+		if (SW3_doublepress_counter >= _st_esos_uiF14Data.u16_doublePressUpperMs) {						
 			SW3_doublepress_counter = -1;		// Counter expired, no double press event, disable counter
 			_st_esos_uiF14Data.b_SW3DoublePressed = FALSE;
 			_st_esos_uiF14Data.b_SW3Pressed = TRUE;
 		// Switch was pressed while counter was running and not expired
-		} else if (SW3_doublepress_counter < DOUBLE_PRESS_UPPER_BOUND_TICKS && SW3_doublepress_counter != -1) {
+		} else if (SW3_doublepress_counter < _st_esos_uiF14Data.u16_doublePressUpperMs && SW3_doublepress_counter != -1) {
 			_st_esos_uiF14Data.b_SW3DoublePressed = TRUE;
 			_st_esos_uiF14Data.b_SW3Pressed = FALSE;
 		// Otherwise, the switch was pressed, start the timer

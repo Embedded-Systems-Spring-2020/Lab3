@@ -4,7 +4,7 @@
 #include "esos_pic24.h"
 //#include "esos_pic24_rs232.h"
 #include <p33EP512GP806.h>
-//#include <pic24_all.h>
+#include <pic24_all.h>
 #include "esos_f14ui.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -55,12 +55,11 @@ ESOS_USER_TASK(drawDisplay) {
 				} else {
 					outString("CCW");
 				}
-
 				if (esos_uiF14_isRPGTurningSlow()) {
 					outString(" Slowly\n");
 				} else if (esos_uiF14_isRPGTurningMedium()) {
 					outString(" Mediumly\n");
-				} else (esos_uiF14_isRPGTurningFast()) { 
+				} else { 
 					outString(" Fastly\n");
 				}
 			} else {
