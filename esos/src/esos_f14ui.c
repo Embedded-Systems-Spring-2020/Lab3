@@ -80,8 +80,6 @@ inline BOOL esos_uiF14_isSW3DoublePressed (void) {
 
 // PUBLIC LED FUNCTIONS
 
-//Ryan: I think some of these functions are intended to actually
-//trigger LED changes, so I'm updating the LED register
 
 inline BOOL esos_uiF14_isLED1On (void) {
     return (_st_esos_uiF14Data.b_LED1On);

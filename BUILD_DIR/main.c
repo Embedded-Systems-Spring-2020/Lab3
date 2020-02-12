@@ -16,7 +16,8 @@
  
 ESOS_USER_TASK(demoLEDsAndSwitches) {
     ESOS_TASK_BEGIN();
-	    esos_uiF14_flashLED3( 500 ); 
+	    esos_uiF14_flashLED3( 500 );           //heartbeat always blinking
+		// RPG controls LED2
 		if (esos_uiF14_isRpgTurning ()){
 			esos_uiF14_turnLED2Off ();
 		}
@@ -29,7 +30,8 @@ ESOS_USER_TASK(demoLEDsAndSwitches) {
 		if (esos_uiF14_isRpgTurningFast()){
 			esos_uiF14_flashLED2( 100 );
 		}
-		if (esos_uiF14_isSW3Released()){
+		//switch on RPG (SW3) controls whether SW1 or SW2 controls LED1
+		if (esos_uiF14_isSW3Released()){      
 			if (esos_uiF14_isSW1Pressed()){
 				esos_uiF14_turnLED1On ();
 			} else if (esos_uiF14_isSW1Released (){
@@ -99,7 +101,6 @@ ESOS_USER_TASK(drawDisplay) {
 			} else {outString("Sw3 is NOT Double Pressed\n\n");}
 
 			if (esos_uiF14_isRPGTurning()) {
-				
 				outString("RPG is Turning ");
 				if (esos_uiF14_isRPGTurningCW()) { 
 					outString("CW ");
@@ -117,13 +118,13 @@ ESOS_USER_TASK(drawDisplay) {
 				outString("RPG is Not Turning");
 			}
 			ESOS_TASK_WAIT_TICKS(50);
-			outString("\n\n\n\n\n\n\n\n");
+			outString("\n\n\n\n\n\n\n\n"); //these newlines clear the screen and allow overwrite
 		}
 	ESOS_TASK_END();
 }
 void user_init(){
 	
+	esos_RegisterTask(demoLEDsAndSwitches);
 	esos_RegisterTask(drawDisplay);
-	
 		
 }

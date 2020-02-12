@@ -20,7 +20,7 @@ typedef struct {
     BOOL b_SW2DoublePressed;    
     BOOL b_SW3Pressed;
     BOOL b_SW3DoublePressed;
-	uint16_t u16_doublePressUpperMs;
+	uint16_t u16_doublePressUpperMs;  //upper time limit to be double pressed
     
     BOOL b_RPGALast;  // compared to current RPGA, used to detect rotation
 	BOOL b_RPGFast;
@@ -30,17 +30,17 @@ typedef struct {
 	uint16_t u16_RPGLastChangeMs;  //time of last RPGA change
 	uint16_t u16_RPGPeriodMs;      // time SINCE last RPGA change
 	uint16_t u16_RPGNotMovingToSlowPeriodMs;  //border between not moving and slow
-	uint16_t u16_RPGSlowToMediumPeriodMs;
-	uint16_t u16_RPGMediumToFastPeriodMs;
-	BOOL b_RPGCW;
-    BOOL b_RPGCCW;
-	int16_t i16_RPGCounter;      // notice signed int for couting CCW from start
-    int16_t i16_lastRPGCounter;
-	BOOL b_RPGCWRev;
+	uint16_t u16_RPGSlowToMediumPeriodMs;     //border between slow and medium
+	uint16_t u16_RPGMediumToFastPeriodMs;	  //border between medium and fast
+	BOOL b_RPGCW;				//clockwise rotation
+    BOOL b_RPGCCW;				//counter clockwise
+	int16_t i16_RPGCounter;      //notice signed int for counting CCW from start
+    int16_t i16_lastRPGCounter;  
+	BOOL b_RPGCWRev;		//T/F has RPG gone 1 full CW revolution?
 	BOOL b_RPGCCWRev;
 	
     BOOL b_LED1On;
-    uint16_t u16_LED1FlashPeriod; 
+    uint16_t u16_LED1FlashPeriod; //period of one full one then off toggle
       
     BOOL b_LED2On;
     uint16_t u16_LED2FlashPeriod;   
