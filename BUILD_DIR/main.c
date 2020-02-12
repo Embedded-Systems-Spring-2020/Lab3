@@ -13,7 +13,58 @@
 #include "revF14.h"
 #include <dataXfer.h> //this is the library that uses the uc/pc variable on the bootloader
 
- enum { u16_DOUBLE_PRESS_UPPER_MS_NDX, // the variables that will be displayed on uc/pc variable tab
+ 
+ESOS_USER_TASK(demoLEDsAndSwitches) {
+    ESOS_TASK_BEGIN();
+	    esos_uiF14_flashLED3( 500 ); 
+		if (esos_uiF14_isRpgTurning ()){
+			esos_uiF14_turnLED2Off ();
+		}
+		if (esos_uiF14_isRpgTurningSlow()){
+			esos_uiF14_turnLED2On ();
+		}
+		if (esos_uiF14_isRpgTurningMedium()){
+			esos_uiF14_flashLED2( 500 );
+		}
+		if (esos_uiF14_isRpgTurningFast()){
+			esos_uiF14_flashLED2( 100 );
+		}
+		if (esos_uiF14_isSW3Released()){
+			if (esos_uiF14_isSW1Pressed()){
+				esos_uiF14_turnLED1On ();
+			} else if (esos_uiF14_isSW1Released (){
+				esos_uiF14_turnLED1Off ();
+			}
+			if (esos_uiF14_isSW1DoublePressed (){
+				int k = 0;
+				for (k, k<3, k++){
+					esos_uiF14_turnLED1On ();
+					ESOS_TASK_WAIT_TICKS(150);
+					esos_uiF14_turnLED1Off ();
+					ESOS_TASK_WAIT_TICKS(150);
+				}
+			}
+		}else if(esos_uiF14_isSW3Pressed()){
+			if (esos_uiF14_isSW2Pressed()){
+				esos_uiF14_turnLED1On ();
+			} else if (esos_uiF14_isSW2Released (){
+				esos_uiF14_turnLED1Off ();
+			}
+			if (esos_uiF14_isSW2DoublePressed (){
+				int m = 0;
+				for (m, m<3, m++){
+					esos_uiF14_turnLED1On ();
+					ESOS_TASK_WAIT_TICKS(150);
+					esos_uiF14_turnLED1Off ();
+					ESOS_TASK_WAIT_TICKS(150);
+				}
+			}
+		}
+	ESOS_TASK_END();
+}	
+		
+
+enum { u16_DOUBLE_PRESS_UPPER_MS_NDX, // the variables that will be displayed on uc/pc variable tab
 		u16_RPG_SLOW_MS_NDX,
 		u16_RPG_MEDIUM_MS_NDX, 
 		u16_RPG_FAST_MS_NDX,
