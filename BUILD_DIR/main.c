@@ -18,28 +18,28 @@ ESOS_USER_TASK(demoLEDsAndSwitches) {
     ESOS_TASK_BEGIN();
 	    esos_uiF14_flashLED3( 500 );           //heartbeat always blinking
 		// RPG controls LED2
-		if (esos_uiF14_isRpgTurning ()){
+		if (esos_uiF14_isRPGTurning ()){
 			esos_uiF14_turnLED2Off ();
 		}
-		if (esos_uiF14_isRpgTurningSlow()){
+		if (esos_uiF14_isRPGTurningSlow()){
 			esos_uiF14_turnLED2On ();
 		}
-		if (esos_uiF14_isRpgTurningMedium()){
+		if (esos_uiF14_isRPGTurningMedium()){
 			esos_uiF14_flashLED2( 500 );
 		}
-		if (esos_uiF14_isRpgTurningFast()){
+		if (esos_uiF14_isRPGTurningFast()){
 			esos_uiF14_flashLED2( 100 );
 		}
 		//switch on RPG (SW3) controls whether SW1 or SW2 controls LED1
 		if (esos_uiF14_isSW3Released()){      
 			if (esos_uiF14_isSW1Pressed()){
 				esos_uiF14_turnLED1On ();
-			} else if (esos_uiF14_isSW1Released (){
+			} else if (esos_uiF14_isSW1Released()){
 				esos_uiF14_turnLED1Off ();
 			}
-			if (esos_uiF14_isSW1DoublePressed (){
-				int k = 0;
-				for (k, k<3, k++){
+			if (esos_uiF14_isSW1DoublePressed()){
+				int k;
+				for (k = 0; k<3; k++){
 					esos_uiF14_turnLED1On ();
 					ESOS_TASK_WAIT_TICKS(150);
 					esos_uiF14_turnLED1Off ();
@@ -49,12 +49,12 @@ ESOS_USER_TASK(demoLEDsAndSwitches) {
 		}else if(esos_uiF14_isSW3Pressed()){
 			if (esos_uiF14_isSW2Pressed()){
 				esos_uiF14_turnLED1On ();
-			} else if (esos_uiF14_isSW2Released (){
+			} else if (esos_uiF14_isSW2Released ()){
 				esos_uiF14_turnLED1Off ();
 			}
-			if (esos_uiF14_isSW2DoublePressed (){
-				int m = 0;
-				for (m, m<3, m++){
+			if (esos_uiF14_isSW2DoublePressed ()){
+				int m;
+				for (m = 0; m<3; m++){
 					esos_uiF14_turnLED1On ();
 					ESOS_TASK_WAIT_TICKS(150);
 					esos_uiF14_turnLED1Off ();
@@ -65,13 +65,13 @@ ESOS_USER_TASK(demoLEDsAndSwitches) {
 	ESOS_TASK_END();
 }	
 		
-
 enum { u16_DOUBLE_PRESS_UPPER_MS_NDX, // the variables that will be displayed on uc/pc variable tab
 		u16_RPG_SLOW_MS_NDX,
 		u16_RPG_MEDIUM_MS_NDX, 
 		u16_RPG_FAST_MS_NDX,
 		u16_RPG_PERIOD_NDX,
-		U16_RPG_VALUE_NDX};  
+		U16_RPG_VALUE_NDX};
+
 
 ESOS_USER_TASK(drawDisplay) {
     ESOS_TASK_BEGIN();
@@ -83,7 +83,7 @@ ESOS_USER_TASK(drawDisplay) {
 		SPECIFY_VAR(u16_RPG_FAST_MS_NDX, _st_esos_uiF14Data.u16_RPGMediumToFastPeriodMs, TRUE, "%u", "Time in ms between RPG clicks -medium to fast");
 		SPECIFY_VAR(u16_RPG_PERIOD_NDX, _st_esos_uiF14Data.u16_RPGPeriodMs, FALSE, "%u", "Time between clicks in ms");
 		SPECIFY_VAR(U16_RPG_VALUE_NDX, _st_esos_uiF14Data.i16_RPGCounter, FALSE, "%u", "Current RPG Counter");	
-		while(1){
+/*		while(1){
 			if (esos_uiF14_isSW1Pressed()){outString("\nSw1 is Pushed  ");}
 			if (esos_uiF14_isSW1Released()){outString("Sw1 is Released");}
 			if (esos_uiF14_isSW1DoublePressed()){outString("Sw1 is Double Pressed\n");
@@ -119,12 +119,13 @@ ESOS_USER_TASK(drawDisplay) {
 			}
 			ESOS_TASK_WAIT_TICKS(50);
 			outString("\n\n\n\n\n\n\n\n"); //these newlines clear the screen and allow overwrite
-		}
+		}*/
 	ESOS_TASK_END();
 }
 void user_init(){
 	
 	esos_RegisterTask(demoLEDsAndSwitches);
 	esos_RegisterTask(drawDisplay);
+	
 		
 }

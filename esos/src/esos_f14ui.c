@@ -221,35 +221,35 @@ inline void esos_uiF14_turnYellowLEDOff (void) {
 
 // PUBLIC RPG FUNCTIONS
 
-inline int16_t esos_uiF14_getRpgCounter_i16 ( void ) {
+inline int16_t esos_uiF14_getRPGCounter_i16 ( void ) {
     return _st_esos_uiF14Data.i16_RPGCounter;
 }
 
-inline BOOL esos_uiF14_isRpgTurning ( void ) {
+inline BOOL esos_uiF14_isRPGTurning ( void ) {
     return !(_st_esos_uiF14Data.b_RPGNotMoving);
 }
 
-inline BOOL esos_uiF14_isRpgTurningSlow( void ) {
+inline BOOL esos_uiF14_isRPGTurningSlow( void ) {
 	return _st_esos_uiF14Data.b_RPGSlow;
 }
 
-inline BOOL esos_uiF14_isRpgTurningMedium( void ) {
+inline BOOL esos_uiF14_isRPGTurningMedium( void ) {
 	return _st_esos_uiF14Data.b_RPGMedium;
 }
 
-inline BOOL esos_uiF14_isRpgTurningFast( void ) {
+inline BOOL esos_uiF14_isRPGTurningFast( void ) {
 	return _st_esos_uiF14Data.b_RPGFast;
 }
 
-inline BOOL esos_uiF14_isRpgTurningCW( void ) {
+inline BOOL esos_uiF14_isRPGTurningCW( void ) {
 	return _st_esos_uiF14Data.b_RPGCW;
 }
 
-inline BOOL esos_uiF14_isRpgTurningCCW( void ) {
+inline BOOL esos_uiF14_isRPGTurningCCW( void ) {
 	return _st_esos_uiF14Data.b_RPGCCW;
 }
 
-inline uint16_t esos_uiF14_getRpgPeriod( void ) {
+inline uint16_t esos_uiF14_getRPGPeriod( void ) {
 	return _st_esos_uiF14Data.u16_RPGPeriodMs;
 }
 
