@@ -7,8 +7,12 @@
 #include "pic24_util.h"
 #include "pic24_serial.h"
 #include "esos_comm.h"
+#include <string.h>
 
 #include "esos_f14ui.h"
+
+
+char buffer[8];
 
  
 ESOS_USER_TASK(demoLEDsAndSwitches) {
@@ -74,6 +78,9 @@ ESOS_USER_TASK(drawDisplay) {
 		//SPECIFY_VAR(u16_RPG_PERIOD_NDX, _st_esos_uiF14Data.u16_RPGPeriodMs, FALSE, "%u", "Time between clicks in ms");
 		//SPECIFY_VAR(U16_RPG_VALUE_NDX, _st_esos_uiF14Data.i16_RPGCounter, FALSE, "%u", "Current RPG Counter");
 		while(1){
+
+			memset(&buffer, 0, sizeof(buffer));	// clear out the input buffer
+
 			if (esos_uiF14_isSW1Pressed()){ESOS_TASK_WAIT_ON_SEND_STRING("\nSw1 is Pushed  ");}
 			if (esos_uiF14_isSW1Released()){ESOS_TASK_WAIT_ON_SEND_STRING("Sw1 is Released");}
 			if (esos_uiF14_isSW1DoublePressed()){ESOS_TASK_WAIT_ON_SEND_STRING("Sw1 is Double Pressed\n");
@@ -109,6 +116,68 @@ ESOS_USER_TASK(drawDisplay) {
 			}
 			ESOS_TASK_WAIT_TICKS(50);
 			ESOS_TASK_WAIT_ON_SEND_STRING("\n\n\n\n\n\n\n\n"); //these newlines clear the screen and allow overwrite
+			//!!!		THE FOLLOWING SHOULD BE TREATED AS PSEUDOCODE UNTIL WE CAN PUT THIS ON A BOARD			!!!
+			ESOS_TASK_WAIT_ON_SEND_STRING(	"+-------Configuration-------+\n\
+											 | 1). Double Press Speed    |\n\
+											 | 2). RPG Speeds			 |\n\
+											 |               			 |\n\
+											 +---------------------------+\n\
+											 \n\
+											 > "
+			);
+
+			ESOS_TASK_WAIT_ON_GET_STRING(&buffer);
+			
+
+			// hoo baby this is a nasty switch case
+			// BUFFER WILL PROBABLY NEED SOME PROCESSING HERE
+			switch(buffer[0]) {
+			
+				case "1":
+					ESOS_TASK_WAIT_ON_SEND_STRING("Enter threshold for double press detection (in ms)\n\
+											 > "
+					);
+					memset(&buffer, 0, sizeof(buffer));
+					ESOS_TASK_WAIT_ON_GET_STRING(&buffer);
+					// SET THRESHOLD (needs setter function)
+
+				case "2":
+					ESOS_TASK_WAIT_ON_SEND_STRING(	"+----RPG Speed Thresholds---+\n\
+													 | 1). Slow                  |\n\
+													 | 2). Medium    			 |\n\
+													 | 3). Fast        			 |\n\
+													 +---------------------------+\n\
+													\n\
+													> "
+					);
+					memset(&buffer, 0, sizeof(buffer));
+					ESOS_TASK_WAIT_ON_GET_STRING(&buffer);
+
+					// oh hell yeah nested switch case
+					switch(buffer[0]) {
+						case "1":
+							ESOS_TASK_WAIT_ON_SEND_STRING("Enter threshold for turning the RPG slowly\n\
+													> "
+							);
+							memset(&buffer, 0, sizeof(buffer));
+							ESOS_TASK_WAIT_ON_GET_STRING(&buffer);
+							// SET THRESHOLD (needs setter function)
+						case "2":
+							ESOS_TASK_WAIT_ON_SEND_STRING("Enter threshold for turning the RPG ...mediumly\n\
+													> "
+							);
+							memset(&buffer, 0, sizeof(buffer));
+							ESOS_TASK_WAIT_ON_GET_STRING(&buffer);
+							// SET THRESHOLD (needs setter function)
+						case "3":
+						ESOS_TASK_WAIT_ON_SEND_STRING("Enter threshold for turning the RPG ...fastly\n\
+													> "
+							);
+							memset(&buffer, 0, sizeof(buffer));
+							ESOS_TASK_WAIT_ON_GET_STRING(&buffer);
+							// SET THRESHOLD (needs setter function)
+					}
+			}
 		}
 	ESOS_TASK_END();
 }
