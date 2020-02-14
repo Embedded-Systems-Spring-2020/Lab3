@@ -12,6 +12,8 @@
 
 #define MINIMUM_LED_FLASH_PERIOD 100
 
+_st_esos_uiF14Data_t _st_esos_uiF14Data;
+
 // PRIVATE FUNCTIONS
 inline void _esos_uiF14_setRPGCounter (int16_t i16_newValue) {
     _st_esos_uiF14Data.i16_RPGCounter = i16_newValue;
