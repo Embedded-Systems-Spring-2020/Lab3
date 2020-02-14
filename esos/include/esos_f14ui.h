@@ -155,19 +155,19 @@ void config_esos_uiF14();
 #define ESOS_TASK_WAIT_UNTIL_UIF14_RPG_TURNS_FAST_CCW()       ESOS_TASK_WAIT_UNTIL( esos_uiF14_isRPGTurningFast() && esos_uiF14_isRPGTurningCCW() )
 #define ESOS_TASK_WAIT_UNTIL_UIF14_RPG_MAKES_REV(u16_numTurns)   do {    \
 							int i = 0;                                            \
-							for (i, i < u16_numTurns, i++){                       \
+							for (i; i < u16_numTurns; i++){                       \
 								ESOS_TASK_WAIT_UNTIL( _st_esos_uiF14Data.b_RPGCWRev || _st_esos_uiF14Data.b_RPGCCWRev);    \
 							}                                                     \
 						  } while (0);                                            
 #define ESOS_TASK_WAIT_UNTIL_UIF14_RPG_MAKES_CW_REV(u16_numTurns)   do { \
 							int i = 0;                                            \
-							for (i, i < u16_numTurns, i++){                       \
+							for (i; i < u16_numTurns; i++){                       \
 								ESOS_TASK_WAIT_UNTIL( _st_esos_uiF14Data.b_RPGCWRev);   \
 							}                                                     \
 						  } while (0);                                            
 #define ESOS_TASK_WAIT_UNTIL_UIF14_RPG_MAKES_CCW_REV(u16_numTurns)   do {  \
 							int j = 0;                                              \
-							for (j, j < u16_numTurns, j++){                         \
+							for (j; j < u16_numTurns; j++){                         \
 								ESOS_TASK_WAIT_UNTIL( _st_esos_uiF14Data.b_RPGCCWRev);  \
 							}                                                       \
 						  } while (0);                                              
