@@ -20,7 +20,7 @@ typedef struct {
     BOOL b_SW2DoublePressed;    
     BOOL b_SW3Pressed;
     BOOL b_SW3DoublePressed;
-	uint16_t u16_doublePressUpperMs;  //upper time limit to be double pressed
+	int16_t u16_doublePressUpperMs;  //upper time limit to be double pressed
     
     BOOL b_RPGALast;  // compared to current RPGA, used to detect rotation
 	BOOL b_RPGFast;

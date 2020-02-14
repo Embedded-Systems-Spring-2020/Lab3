@@ -255,9 +255,9 @@ inline uint16_t esos_uiF14_getRPGPeriod( void ) {
 
 // UIF14 task to manage user-interface
 ESOS_USER_TASK(__esos_uiF14_task){
-  static int LED1_counter = 0;
-  static int LED2_counter = 0;
-  static int LED3_counter = 0;
+  static uint16_t LED1_counter = 0;
+  static uint16_t LED2_counter = 0;
+  static uint16_t LED3_counter = 0;
 
   // init to -1 to disable counters by default
   static int SW1_doublepress_counter = -1;
