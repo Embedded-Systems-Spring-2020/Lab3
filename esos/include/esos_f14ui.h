@@ -59,10 +59,6 @@ typedef struct {
 #define __ESOS_UIF14_UI_PERIOD_MS       10
 #define __RPGCountsPerRev               12
 
-// PRIVATE DATA 
- 
-_st_esos_uiF14Data_t _st_esos_uiF14Data;
-
 // PRIVATE FUNCTION PROTOTYPES
 
 inline void _esos_uiF14_setRPGCounter (int16_t);
