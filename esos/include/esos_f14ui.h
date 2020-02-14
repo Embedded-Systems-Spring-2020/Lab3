@@ -41,12 +41,15 @@ typedef struct {
 	
     BOOL b_LED1On;
     uint16_t u16_LED1FlashPeriod; //period of one full one then off toggle
+	BOOL b_LED1Flashing;
       
     BOOL b_LED2On;
     uint16_t u16_LED2FlashPeriod;   
+	BOOL b_LED2Flashing;
      
     BOOL b_LED3On;
     uint16_t u16_LED3FlashPeriod;        
+	BOOL b_LED3Flashing;
     
 } _st_esos_uiF14Data_t;
 

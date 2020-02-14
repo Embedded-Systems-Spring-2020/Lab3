@@ -5,12 +5,12 @@
  *    requires the EMBEDDED SYSTEMS target rev. F14
  * 
  * ****************************************************************/
-# include <esos_f14ui.h>
-# include <revF14.h>
+#include <esos.h>
+#include "esos_pic24.h"
+#include <esos_f14ui.h>
+#include <revF14.h>
 
 #define MINIMUM_LED_FLASH_PERIOD 100
-
-
 
 // PRIVATE FUNCTIONS
 inline void _esos_uiF14_setRPGCounter (int16_t i16_newValue) {
@@ -79,8 +79,6 @@ inline BOOL esos_uiF14_isSW3DoublePressed (void) {
 }
 
 // PUBLIC LED FUNCTIONS
-
-
 inline BOOL esos_uiF14_isLED1On (void) {
     return (_st_esos_uiF14Data.b_LED1On);
 }
@@ -110,7 +108,7 @@ inline void esos_uiF14_flashLED1( uint16_t u16_period1) {
 		u16_period1 = MINIMUM_LED_FLASH_PERIOD;
 	} 
     _st_esos_uiF14Data.u16_LED1FlashPeriod = u16_period1;
-    return
+    return;
 }
 
 inline uint16_t esos_uiF14_getLED1Period(void) {
@@ -146,7 +144,7 @@ inline void esos_uiF14_flashLED2( uint16_t u16_period2) {
 		u16_period2 = MINIMUM_LED_FLASH_PERIOD;
 	} 
     _st_esos_uiF14Data.u16_LED2FlashPeriod = u16_period2;
-    return
+    return;
 }
 
 inline uint16_t esos_uiF14_getLED2Period(void) {
@@ -183,7 +181,7 @@ inline void esos_uiF14_flashLED3( uint16_t u16_period3) {
 		u16_period3 = MINIMUM_LED_FLASH_PERIOD;
 	} 
     _st_esos_uiF14Data.u16_LED3FlashPeriod = u16_period3;
-    return
+    return;
 }
 
 inline uint16_t esos_uiF14_getLED3Period(void) {
@@ -253,78 +251,8 @@ inline uint16_t esos_uiF14_getRPGPeriod( void ) {
 	return _st_esos_uiF14Data.u16_RPGPeriodMs;
 }
 
-// UIF14 INITIALIZATION FUNCTION
-
-void config_esos_uiF14() {
-	
-    _st_esos_uiF14Data.b_SW1Pressed = FALSE;
-    _st_esos_uiF14Data.b_SW1DoublePressed = FALSE;
-    _st_esos_uiF14Data.b_SW2Pressed = FALSE;
-    _st_esos_uiF14Data.b_SW2DoublePressed = FALSE;    
-    _st_esos_uiF14Data.b_SW3Pressed = FALSE;
-    _st_esos_uiF14Data.b_SW3DoublePressed = FALSE;
-	_st_esos_uiF14Data.u16_doublePressUpperMs = 250;
-    
-    _st_esos_uiF14Data.b_RPGALast;  // compared to current RPGA, used to detect rotation
-	_st_esos_uiF14Data.b_RPGFast = FALSE;
-	_st_esos_uiF14Data.b_RPGMedium = FALSE;
-	_st_esos_uiF14Data.b_RPGSlow = FALSE;
-	_st_esos_uiF14Data.b_RPGNotMoving = TRUE;
-	_st_esos_uiF14Data.u16_RPGLastChangeMs = 0;  //time of last RPGA change
-	_st_esos_uiF14Data.u16_RPGPeriodMs = 0;      // time SINCE last RPGA change
-	_st_esos_uiF14Data.u16_RPGNotMovingToSlowPeriodMs = 300;  //border between not moving and slow
-	_st_esos_uiF14Data.u16_RPGSlowToMediumPeriodMs = 200;
-	_st_esos_uiF14Data.u16_RPGMediumToFastPeriodMs = 100;
-	_st_esos_uiF14Data.b_RPGCW = FALSE;
-    _st_esos_uiF14Data.b_RPGCCW = FALSE;
-	_st_esos_uiF14Data.i16_RPGCounter = 0;      // notice signed int for couting CCW from start
-    _st_esos_uiF14Data.i16_lastRPGCounter = 0;
-	_st_esos_uiF14Data.b_RPGCWRev = FALSE;
-	_st_esos_uiF14Data.b_RPGCCWRev = FALSE;
-	
-    _st_esos_uiF14Data.b_LED1On = FALSE;
-    _st_esos_uiF14Data.b_LED1Flashing = FALSE;
-    _st_esos_uiF14Data.u16_LED1FlashPeriod = FALSE; 
-      
-    _st_esos_uiF14Data.b_LED2On = FALSE;
-    _st_esos_uiF14Data.b_LED2Flashing = FALSE;
-    _st_esos_uiF14Data.u16_LED2FlashPeriod = FALSE;   
-     
-    _st_esos_uiF14Data.b_LED3On = FALSE;
-    _st_esos_uiF14Data.b_LED3Flashing = FALSE;
-    _st_esos_uiF14Data.u16_LED3FlashPeriod = FALSE;
-
-  //Step 1: setup LEDs
-  //
-  CONFIG_LED1();
-  CONFIG_LED2();
-  CONFIG_LED3();
-
-  //Step 2: setup switches
-  CONFIG_SW1();
-  CONFIG_SW2();
-  CONFIG_SW3();
-
-  //Step 3: setup RPG
-  CONFIG_RPG();
-
-  esos_RegisterTask( __uiF14_task );
-}
-
-ESOS_USER_TIMER(__doublepress_SW1_timer) {
-	esos_SetUserFlag(DOUBLEPRESS_SW1_TIMER_EXPIRED);
-}
-
-ESOS_USER_TIMER(__doublepress_SW2_timer) {
-	esos_SetUserFlag(DOUBLEPRESS_SW2_TIMER_EXPIRED);
-}
-
-ESOS_USER_TIMER(__doublepress_SW3_timer) {
-	esos_SetUserFlag(DOUBLEPRESS_SW3_TIMER_EXPIRED);
-}
-
 // UIF14 task to manage user-interface
-ESOS_USER_TASK( __esos_uiF14_task ){
+ESOS_USER_TASK(__esos_uiF14_task){
   static LED1_counter = 0;
   static LED2_counter = 0;
   static LED3_counter = 0;
@@ -429,31 +357,31 @@ ESOS_USER_TASK( __esos_uiF14_task ){
 	}
 
 	/* SWITCH COUNTER LOGIC */
-	if (SW1_doublepress_counter != -1) {SW1_doublepress_counter++}
-	if (SW2_doublepress_counter != -1) {SW2_doublepress_counter++}
-	if (SW3_doublepress_counter != -1) {SW3_doublepress_counter++}
+	if (SW1_doublepress_counter != -1) {SW1_doublepress_counter++;}
+	if (SW2_doublepress_counter != -1) {SW2_doublepress_counter++;}
+	if (SW3_doublepress_counter != -1) {SW3_doublepress_counter++;}
 	
 	//+++++++++++++++RPG++++++++++++++++++++
 	//determines if RPG is moving
 	if (RPGA != _st_esos_uiF14Data.b_RPGALast){ 
 		//determines time since last change, used for speed calc
-		_st_esos_uiF14Data.RPGPeriodMs = (esos_GetSystemTick()) - 
+		_st_esos_uiF14Data.u16_RPGPeriodMs = (esos_GetSystemTick()) - 
 										 (_st_esos_uiF14Data.u16_RPGLastChangeMs); 
-		_st_esos_uiF14Data.b_RPGNotMoving = false;
+		_st_esos_uiF14Data.b_RPGNotMoving = FALSE;
 		
 		// compare time since last RPGA change to slow/med/fast cutoffs
-		if (_st_esos_uiF14Data.RPGPeriodMs >= _st_esos_uiF14Data.u16_RPGMediumToFastPeriodMs){
+		if (_st_esos_uiF14Data.u16_RPGPeriodMs >= _st_esos_uiF14Data.u16_RPGMediumToFastPeriodMs){
 			_st_esos_uiF14Data.b_RPGFast = TRUE;
 		}	
-		else if (_st_esos_uiF14Data.RPGPeriodMs >= _st_esos_uiF14Data.u16_RPGSlowToMediumPeriodMs){
+		else if (_st_esos_uiF14Data.u16_RPGPeriodMs >= _st_esos_uiF14Data.u16_RPGSlowToMediumPeriodMs){
 		  _st_esos_uiF14Data.b_RPGMedium = TRUE;
 		}
 		else {
-			st_esos_uiF14Data.b_RPGSlow = TRUE;
+			_st_esos_uiF14Data.b_RPGSlow = TRUE;
 		}
 		
 		//determine CW or CCW; remember RPGA just changed
-		if ((RPGA == 0 && RPGB == 1) || (RPGA == 1 && RPGB == 0){
+		if ((RPGA == 0 && RPGB == 1) || (RPGA == 1 && RPGB == 0)) {
 			_st_esos_uiF14Data.b_RPGCW = TRUE;
 			_st_esos_uiF14Data.b_RPGCCW = FALSE;
 		}
@@ -485,7 +413,7 @@ ESOS_USER_TASK( __esos_uiF14_task ){
 		}
 	}
 	else {  //reset flags after short delay to show no RPG motion
-		ESOS_USER_TASK_WAIT_TICKS(_st_esos_uiF14Data.u16_RPGNotMovingToSlowPeriodMs);
+		ESOS_TASK_WAIT_TICKS(_st_esos_uiF14Data.u16_RPGNotMovingToSlowPeriodMs);
 		_st_esos_uiF14Data.b_RPGNotMoving = TRUE;
 		_st_esos_uiF14Data.b_RPGFast = FALSE;
 		_st_esos_uiF14Data.b_RPGMedium = FALSE;
@@ -494,9 +422,65 @@ ESOS_USER_TASK( __esos_uiF14_task ){
 		_st_esos_uiF14Data.b_RPGCCW = FALSE;
 	}
 	
-	
-	
     ESOS_TASK_WAIT_TICKS( __ESOS_UIF14_UI_PERIOD_MS );
   }
   ESOS_TASK_END();
+}
+
+
+// UIF14 INITIALIZATION FUNCTION
+void config_esos_uiF14() {
+	
+    _st_esos_uiF14Data.b_SW1Pressed = FALSE;
+    _st_esos_uiF14Data.b_SW1DoublePressed = FALSE;
+    _st_esos_uiF14Data.b_SW2Pressed = FALSE;
+    _st_esos_uiF14Data.b_SW2DoublePressed = FALSE;    
+    _st_esos_uiF14Data.b_SW3Pressed = FALSE;
+    _st_esos_uiF14Data.b_SW3DoublePressed = FALSE;
+	_st_esos_uiF14Data.u16_doublePressUpperMs = 250;
+    
+    _st_esos_uiF14Data.b_RPGALast;  // compared to current RPGA, used to detect rotation
+	_st_esos_uiF14Data.b_RPGFast = FALSE;
+	_st_esos_uiF14Data.b_RPGMedium = FALSE;
+	_st_esos_uiF14Data.b_RPGSlow = FALSE;
+	_st_esos_uiF14Data.b_RPGNotMoving = TRUE;
+	_st_esos_uiF14Data.u16_RPGLastChangeMs = 0;  //time of last RPGA change
+	_st_esos_uiF14Data.u16_RPGPeriodMs = 0;      // time SINCE last RPGA change
+	_st_esos_uiF14Data.u16_RPGNotMovingToSlowPeriodMs = 300;  //border between not moving and slow
+	_st_esos_uiF14Data.u16_RPGSlowToMediumPeriodMs = 200;
+	_st_esos_uiF14Data.u16_RPGMediumToFastPeriodMs = 100;
+	_st_esos_uiF14Data.b_RPGCW = FALSE;
+    _st_esos_uiF14Data.b_RPGCCW = FALSE;
+	_st_esos_uiF14Data.i16_RPGCounter = 0;      // notice signed int for couting CCW from start
+    _st_esos_uiF14Data.i16_lastRPGCounter = 0;
+	_st_esos_uiF14Data.b_RPGCWRev = FALSE;
+	_st_esos_uiF14Data.b_RPGCCWRev = FALSE;
+	
+    _st_esos_uiF14Data.b_LED1On = FALSE;
+    _st_esos_uiF14Data.b_LED1Flashing = FALSE;
+    _st_esos_uiF14Data.u16_LED1FlashPeriod = FALSE; 
+      
+    _st_esos_uiF14Data.b_LED2On = FALSE;
+    _st_esos_uiF14Data.b_LED2Flashing = FALSE;
+    _st_esos_uiF14Data.u16_LED2FlashPeriod = FALSE;   
+     
+    _st_esos_uiF14Data.b_LED3On = FALSE;
+    _st_esos_uiF14Data.b_LED3Flashing = FALSE;
+    _st_esos_uiF14Data.u16_LED3FlashPeriod = FALSE;
+
+  //Step 1: setup LEDs
+  //
+  CONFIG_LED1();
+  CONFIG_LED2();
+  CONFIG_LED3();
+
+  //Step 2: setup switches
+  CONFIG_SW1();
+  CONFIG_SW2();
+  CONFIG_SW3();
+
+  //Step 3: setup RPG
+  CONFIG_RPG();
+
+  esos_RegisterTask(__esos_uiF14_task);
 }

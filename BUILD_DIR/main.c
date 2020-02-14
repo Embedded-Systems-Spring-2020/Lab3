@@ -16,48 +16,48 @@
  
 ESOS_USER_TASK(demoLEDsAndSwitches) {
     ESOS_TASK_BEGIN();
-	    esos_uiF14_flashLED3( 500 );           //heartbeat always blinking
+	    esos_uiF14_flashLED3(500);           //heartbeat always blinking
 		// RPG controls LED2
-		if (esos_uiF14_isRPGTurning ()){
-			esos_uiF14_turnLED2Off ();
+		if (esos_uiF14_isRPGTurning()){
+			esos_uiF14_turnLED2Off();
 		}
 		if (esos_uiF14_isRPGTurningSlow()){
-			esos_uiF14_turnLED2On ();
+			esos_uiF14_turnLED2On();
 		}
 		if (esos_uiF14_isRPGTurningMedium()){
-			esos_uiF14_flashLED2( 500 );
+			esos_uiF14_flashLED2(500);
 		}
 		if (esos_uiF14_isRPGTurningFast()){
-			esos_uiF14_flashLED2( 100 );
+			esos_uiF14_flashLED2(100);
 		}
 		//switch on RPG (SW3) controls whether SW1 or SW2 controls LED1
 		if (esos_uiF14_isSW3Released()){      
 			if (esos_uiF14_isSW1Pressed()){
-				esos_uiF14_turnLED1On ();
+				esos_uiF14_turnLED1On();
 			} else if (esos_uiF14_isSW1Released()){
-				esos_uiF14_turnLED1Off ();
+				esos_uiF14_turnLED1Off();
 			}
 			if (esos_uiF14_isSW1DoublePressed()){
 				int k;
 				for (k = 0; k<3; k++){
-					esos_uiF14_turnLED1On ();
+					esos_uiF14_turnLED1On();
 					ESOS_TASK_WAIT_TICKS(150);
-					esos_uiF14_turnLED1Off ();
+					esos_uiF14_turnLED1Off();
 					ESOS_TASK_WAIT_TICKS(150);
 				}
 			}
 		}else if(esos_uiF14_isSW3Pressed()){
 			if (esos_uiF14_isSW2Pressed()){
-				esos_uiF14_turnLED1On ();
-			} else if (esos_uiF14_isSW2Released ()){
-				esos_uiF14_turnLED1Off ();
+				esos_uiF14_turnLED1On();
+			} else if (esos_uiF14_isSW2Released()){
+				esos_uiF14_turnLED1Off();
 			}
-			if (esos_uiF14_isSW2DoublePressed ()){
+			if (esos_uiF14_isSW2DoublePressed()){
 				int m;
 				for (m = 0; m<3; m++){
-					esos_uiF14_turnLED1On ();
+					esos_uiF14_turnLED1On();
 					ESOS_TASK_WAIT_TICKS(150);
-					esos_uiF14_turnLED1Off ();
+					esos_uiF14_turnLED1Off();
 					ESOS_TASK_WAIT_TICKS(150);
 				}
 			}

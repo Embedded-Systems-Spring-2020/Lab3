@@ -58,7 +58,7 @@ PIC24SupportLibSources = [
   'lib/src/pic24_spi.c',
   'lib/src/pic24_timer.c',
   'lib/src/pic24_uart.c',
-  'lib/src/pic24_util.c' ]
+  'lib/src/pic24_util.c']
 
 # Functions used to build the library
 # ===================================
