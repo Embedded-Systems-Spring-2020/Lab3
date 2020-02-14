@@ -441,7 +441,7 @@ void config_esos_uiF14() {
     _st_esos_uiF14Data.b_SW3DoublePressed = FALSE;
 	_st_esos_uiF14Data.u16_doublePressUpperMs = 250;
     
-    _st_esos_uiF14Data.b_RPGALast;  // compared to current RPGA, used to detect rotation
+    _st_esos_uiF14Data.b_RPGALast = FALSE;  // compared to current RPGA, used to detect rotation
 	_st_esos_uiF14Data.b_RPGFast = FALSE;
 	_st_esos_uiF14Data.b_RPGMedium = FALSE;
 	_st_esos_uiF14Data.b_RPGSlow = FALSE;
