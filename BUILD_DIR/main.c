@@ -2,16 +2,15 @@
 
 #include <esos.h>
 #include "esos_pic24.h"
-//#include "esos_pic24_rs232.h"
+#include "esos_pic24_rs232.h"
 #include <p33EP512GP806.h>
-#include <pic24_all.h>
-#include "esos_f14ui.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include "pic24_util.h"
 #include "pic24_serial.h"
-#include "revF14.h"
 #include "esos_comm.h"
+
+#include "esos_f14ui.h"
 
  
 ESOS_USER_TASK(demoLEDsAndSwitches) {

@@ -6,10 +6,10 @@
  * 
  * ****************************************************************/
 
-# include <all_generic.h>
 
-#ifndef   ESOS_UIF14_H
+#ifndef ESOS_UIF14_H
 #define ESOS_UIF14_H
+# include <all_generic.h>
 
 // STRUCTURES
 

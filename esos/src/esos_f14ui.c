@@ -5,9 +5,9 @@
  *    requires the EMBEDDED SYSTEMS target rev. F14
  * 
  * ****************************************************************/
+#include <esos_f14ui.h>
 #include <esos.h>
 #include "esos_pic24.h"
-#include <esos_f14ui.h>
 #include <revF14.h>
 
 #define MINIMUM_LED_FLASH_PERIOD 100
@@ -258,9 +258,9 @@ ESOS_USER_TASK(__esos_uiF14_task){
   static LED3_counter = 0;
 
   // init to -1 to disable counters by default
-  static SW1_doublepress_counter = -1;
-  static SW2_doublepress_counter = -1;
-  static SW3_doublepress_counter = -1;
+  static int SW1_doublepress_counter = -1;
+  static int SW2_doublepress_counter = -1;
+  static int SW3_doublepress_counter = -1;
 
   ESOS_TASK_BEGIN();
   while(TRUE) {
