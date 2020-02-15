@@ -17,6 +17,7 @@ char buffer[8];
  
 ESOS_USER_TASK(demoLEDsAndSwitches) {
     ESOS_TASK_BEGIN();
+	  while(1){
 	    esos_uiF14_flashLED3(500);           //heartbeat always blinking
 		// RPG controls LED2
 		if (esos_uiF14_isRPGTurning()){
@@ -63,11 +64,12 @@ ESOS_USER_TASK(demoLEDsAndSwitches) {
 				}
 			}
 		}
+	  }
 	ESOS_TASK_END();
 }	
 
 
-ESOS_USER_TASK(drawDisplay) {
+/*ESOS_USER_TASK(drawDisplay) {
     ESOS_TASK_BEGIN();
 		//initDataXfer(); 
 		//format for below... var name from enum above, actual var name, T/F changeable, label
@@ -180,9 +182,9 @@ ESOS_USER_TASK(drawDisplay) {
 			}
 		}
 	ESOS_TASK_END();
-}
+}*/
 
 void user_init(void){
 	esos_RegisterTask(demoLEDsAndSwitches);
-	esos_RegisterTask(drawDisplay);
+	//esos_RegisterTask(drawDisplay);
 }
