@@ -468,6 +468,8 @@ ESOS_USER_TASK(__esos_uiF14_task){
 	//+++++++++++++++RPG++++++++++++++++++++
 	//determines if RPG is moving
 	if (RPGA != _st_esos_uiF14Data.b_RPGALast){ 
+		_st_esos_uiF14Data.b_RPGALast = RPGA;
+
 		//determines time since last change, used for speed calc
 		_st_esos_uiF14Data.u16_RPGPeriodMs = (esos_GetSystemTick()) - 
 										 (_st_esos_uiF14Data.u16_RPGLastChangeMs); 
@@ -486,12 +488,12 @@ ESOS_USER_TASK(__esos_uiF14_task){
 		
 		//determine CW or CCW; remember RPGA just changed
 		if ((RPGA == 0 && RPGB == 1) || (RPGA == 1 && RPGB == 0)) {
-			_st_esos_uiF14Data.b_RPGCW = TRUE;
-			_st_esos_uiF14Data.b_RPGCCW = FALSE;
-		}
-		else{
 			_st_esos_uiF14Data.b_RPGCW = FALSE;
 			_st_esos_uiF14Data.b_RPGCCW = TRUE;
+		}
+		else{
+			_st_esos_uiF14Data.b_RPGCW = TRUE;
+			_st_esos_uiF14Data.b_RPGCCW = FALSE;
 		}
 		
 		//update the counter for later use in revolution calculations 

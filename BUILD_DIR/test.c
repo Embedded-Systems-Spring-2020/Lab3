@@ -52,7 +52,7 @@ ESOS_USER_TASK(drawDisplay) {
 			ESOS_TASK_WAIT_ON_SEND_STRING("\n\n\n\n\n\n");
 
 			ESOS_TASK_SIGNAL_AVAILABLE_OUT_COMM();
-			ESOS_TASK_WAIT_TICKS(250);
+			ESOS_TASK_YIELD();
 		}
 	ESOS_TASK_END();
 }
@@ -190,7 +190,7 @@ ESOS_USER_TASK(menu) {
 
 void user_init(void){
     config_esos_uiF14();
-    esos_RegisterTask(menu);
+    // esos_RegisterTask(menu);
 	esos_RegisterTask(demoLEDsAndSwitches);
 	esos_RegisterTask(drawDisplay);
 
