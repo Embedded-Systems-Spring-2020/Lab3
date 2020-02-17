@@ -70,6 +70,8 @@ inline uint16_t _esos_uiF14_getRPGPeriod (void);
 
 // PUBLIC API FUNCTION PROTOTYPES
 
+inline void esos_uiF14_setDoublePressPeriod(uint16_t);
+
 inline BOOL esos_uiF14_isSW1Pressed (void);
 inline BOOL esos_uiF14_isSW1Released (void);
 inline BOOL esos_uiF14_isSW1DoublePressed (void);

@@ -10,7 +10,10 @@
 #include "esos_pic24.h"
 #include <revF14.h>
 
+#include <stdio.h>
+
 #define MINIMUM_LED_FLASH_PERIOD 100
+#define DEBOUNCE_PERIOD 30
 
 _st_esos_uiF14Data_t _st_esos_uiF14Data;
 
@@ -253,11 +256,19 @@ inline uint16_t esos_uiF14_getRPGPeriod( void ) {
 	return _st_esos_uiF14Data.u16_RPGPeriodMs;
 }
 
+inline void esos_uiF14_setDoublePressPeriod(uint16_t limit) {
+	_st_esos_uiF14Data.u16_doublePressUpperMs = limit;
+	return;
+}
+
 // UIF14 task to manage user-interface
 ESOS_USER_TASK(__esos_uiF14_task){
   static uint16_t LED1_counter = 0;
   static uint16_t LED2_counter = 0;
   static uint16_t LED3_counter = 0;
+
+  static BOOL SW1_is_debouncing = 0;
+  static uint16_t SW1_debounce_counter = 0;
 
   // init to -1 to disable counters by default
   static int SW1_doublepress_counter = -1;
@@ -289,7 +300,7 @@ ESOS_USER_TASK(__esos_uiF14_task){
 		LED1_counter = 0;
 	} else if (LED1_counter < esos_uiF14_getLED1Period() / 2) { //Count up to half period
 		LED1_counter += __ESOS_UIF14_UI_PERIOD_MS;
-	} else if (LED1_counter > esos_uiF14_getLED1Period() / 2) { //Toggle when greater than half period
+	} else if (LED1_counter >= esos_uiF14_getLED1Period() / 2) { //Toggle when greater than half period
 		esos_uiF14_toggleLED1();
 		LED1_counter = 0;
 	}
@@ -298,7 +309,7 @@ ESOS_USER_TASK(__esos_uiF14_task){
 		LED2_counter = 0;
 	} else if (LED2_counter < esos_uiF14_getLED2Period() /2) {
 		LED2_counter += __ESOS_UIF14_UI_PERIOD_MS;
-	} else if (LED2_counter > esos_uiF14_getLED2Period() / 2) {
+	} else if (LED2_counter >= esos_uiF14_getLED2Period() / 2) {
 		esos_uiF14_toggleLED2();
 		LED2_counter = 0;
 	}
@@ -307,10 +318,19 @@ ESOS_USER_TASK(__esos_uiF14_task){
 		LED3_counter = 0;
 	} else if (LED3_counter < esos_uiF14_getLED3Period() / 2) {
 		LED3_counter += __ESOS_UIF14_UI_PERIOD_MS;
-	} else if (LED3_counter > esos_uiF14_getLED3Period() / 2) {
+	} else if (LED3_counter >= esos_uiF14_getLED3Period() / 2) {
 		esos_uiF14_toggleLED3();
 		LED3_counter = 0;
 	}
+
+	if (SW1_is_debouncing && SW1_debounce_counter < ) {
+		SW1_debounce_counter += __ESOS_UIF14_UI_PERIOD_MS;
+	}
+
+	if (SW1_PRESSED != esos_uiF14_isSW1Pressed() && !SW1_is_debouncing) {
+		SW1_is_debouncing = TRUE;
+	}
+
 
 	/* SWITCH STATE LOGIC */
 	if (SW1_PRESSED || SW1_doublepress_counter >= _st_esos_uiF14Data.u16_doublePressUpperMs) {
@@ -322,6 +342,9 @@ ESOS_USER_TASK(__esos_uiF14_task){
 		} else if (SW1_doublepress_counter < _st_esos_uiF14Data.u16_doublePressUpperMs && SW1_doublepress_counter != -1) {
 			_st_esos_uiF14Data.b_SW1DoublePressed = TRUE;
 			_st_esos_uiF14Data.b_SW1Pressed = FALSE;
+
+			printf("\nSwitch 1 double pressed\n");
+
 		// Otherwise, the switch was pressed, start the timer
 		} else {
 			SW1_doublepress_counter = 0;		// Start the timer
@@ -363,66 +386,66 @@ ESOS_USER_TASK(__esos_uiF14_task){
 	if (SW2_doublepress_counter != -1) {SW2_doublepress_counter++;}
 	if (SW3_doublepress_counter != -1) {SW3_doublepress_counter++;}
 	
-	//+++++++++++++++RPG++++++++++++++++++++
-	//determines if RPG is moving
-	if (RPGA != _st_esos_uiF14Data.b_RPGALast){ 
-		//determines time since last change, used for speed calc
-		_st_esos_uiF14Data.u16_RPGPeriodMs = (esos_GetSystemTick()) - 
-										 (_st_esos_uiF14Data.u16_RPGLastChangeMs); 
-		_st_esos_uiF14Data.b_RPGNotMoving = FALSE;
+	// //+++++++++++++++RPG++++++++++++++++++++
+	// //determines if RPG is moving
+	// if (RPGA != _st_esos_uiF14Data.b_RPGALast){ 
+	// 	//determines time since last change, used for speed calc
+	// 	_st_esos_uiF14Data.u16_RPGPeriodMs = (esos_GetSystemTick()) - 
+	// 									 (_st_esos_uiF14Data.u16_RPGLastChangeMs); 
+	// 	_st_esos_uiF14Data.b_RPGNotMoving = FALSE;
 		
-		// compare time since last RPGA change to slow/med/fast cutoffs
-		if (_st_esos_uiF14Data.u16_RPGPeriodMs >= _st_esos_uiF14Data.u16_RPGMediumToFastPeriodMs){
-			_st_esos_uiF14Data.b_RPGFast = TRUE;
-		}	
-		else if (_st_esos_uiF14Data.u16_RPGPeriodMs >= _st_esos_uiF14Data.u16_RPGSlowToMediumPeriodMs){
-		  _st_esos_uiF14Data.b_RPGMedium = TRUE;
-		}
-		else {
-			_st_esos_uiF14Data.b_RPGSlow = TRUE;
-		}
+	// 	// compare time since last RPGA change to slow/med/fast cutoffs
+	// 	if (_st_esos_uiF14Data.u16_RPGPeriodMs >= _st_esos_uiF14Data.u16_RPGMediumToFastPeriodMs){
+	// 		_st_esos_uiF14Data.b_RPGFast = TRUE;
+	// 	}	
+	// 	else if (_st_esos_uiF14Data.u16_RPGPeriodMs >= _st_esos_uiF14Data.u16_RPGSlowToMediumPeriodMs){
+	// 	  _st_esos_uiF14Data.b_RPGMedium = TRUE;
+	// 	}
+	// 	else {
+	// 		_st_esos_uiF14Data.b_RPGSlow = TRUE;
+	// 	}
 		
-		//determine CW or CCW; remember RPGA just changed
-		if ((RPGA == 0 && RPGB == 1) || (RPGA == 1 && RPGB == 0)) {
-			_st_esos_uiF14Data.b_RPGCW = TRUE;
-			_st_esos_uiF14Data.b_RPGCCW = FALSE;
-		}
-		else{
-			_st_esos_uiF14Data.b_RPGCW = FALSE;
-			_st_esos_uiF14Data.b_RPGCCW = TRUE;
-		}
+	// 	//determine CW or CCW; remember RPGA just changed
+	// 	if ((RPGA == 0 && RPGB == 1) || (RPGA == 1 && RPGB == 0)) {
+	// 		_st_esos_uiF14Data.b_RPGCW = TRUE;
+	// 		_st_esos_uiF14Data.b_RPGCCW = FALSE;
+	// 	}
+	// 	else{
+	// 		_st_esos_uiF14Data.b_RPGCW = FALSE;
+	// 		_st_esos_uiF14Data.b_RPGCCW = TRUE;
+	// 	}
 		
-		//update the counter for later use in revolution calculations 
-		if (_st_esos_uiF14Data.b_RPGCW){
-			_st_esos_uiF14Data.i16_RPGCounter +=1;
-		}
-		if (_st_esos_uiF14Data.b_RPGCCW){
-			_st_esos_uiF14Data.i16_RPGCounter -=1;
-		}
-		if (_st_esos_uiF14Data.i16_RPGCounter == _st_esos_uiF14Data.i16_lastRPGCounter +
-												__RPGCountsPerRev){
-			_st_esos_uiF14Data.b_RPGCWRev = TRUE;
-			_st_esos_uiF14Data.i16_lastRPGCounter = _st_esos_uiF14Data.i16_RPGCounter;
-		}
-		else if (_st_esos_uiF14Data.i16_RPGCounter == _st_esos_uiF14Data.i16_lastRPGCounter -
-												__RPGCountsPerRev){
-			_st_esos_uiF14Data.b_RPGCCWRev = TRUE;
-			_st_esos_uiF14Data.i16_lastRPGCounter = _st_esos_uiF14Data.i16_RPGCounter;
-		}
-		else {
-			  _st_esos_uiF14Data.b_RPGCWRev = FALSE;
-			  _st_esos_uiF14Data.b_RPGCCWRev = FALSE;
-		}
-	}
-	else {  //reset flags after short delay to show no RPG motion
-		ESOS_TASK_WAIT_TICKS(_st_esos_uiF14Data.u16_RPGNotMovingToSlowPeriodMs);
-		_st_esos_uiF14Data.b_RPGNotMoving = TRUE;
-		_st_esos_uiF14Data.b_RPGFast = FALSE;
-		_st_esos_uiF14Data.b_RPGMedium = FALSE;
-		_st_esos_uiF14Data.b_RPGSlow = FALSE;
-		_st_esos_uiF14Data.b_RPGCW = FALSE;
-		_st_esos_uiF14Data.b_RPGCCW = FALSE;
-	}
+	// 	//update the counter for later use in revolution calculations 
+	// 	if (_st_esos_uiF14Data.b_RPGCW){
+	// 		_st_esos_uiF14Data.i16_RPGCounter +=1;
+	// 	}
+	// 	if (_st_esos_uiF14Data.b_RPGCCW){
+	// 		_st_esos_uiF14Data.i16_RPGCounter -=1;
+	// 	}
+	// 	if (_st_esos_uiF14Data.i16_RPGCounter == _st_esos_uiF14Data.i16_lastRPGCounter +
+	// 											__RPGCountsPerRev){
+	// 		_st_esos_uiF14Data.b_RPGCWRev = TRUE;
+	// 		_st_esos_uiF14Data.i16_lastRPGCounter = _st_esos_uiF14Data.i16_RPGCounter;
+	// 	}
+	// 	else if (_st_esos_uiF14Data.i16_RPGCounter == _st_esos_uiF14Data.i16_lastRPGCounter -
+	// 											__RPGCountsPerRev){
+	// 		_st_esos_uiF14Data.b_RPGCCWRev = TRUE;
+	// 		_st_esos_uiF14Data.i16_lastRPGCounter = _st_esos_uiF14Data.i16_RPGCounter;
+	// 	}
+	// 	else {
+	// 		  _st_esos_uiF14Data.b_RPGCWRev = FALSE;
+	// 		  _st_esos_uiF14Data.b_RPGCCWRev = FALSE;
+	// 	}
+	// }
+	// else {  //reset flags after short delay to show no RPG motion
+	// 	ESOS_TASK_WAIT_TICKS(_st_esos_uiF14Data.u16_RPGNotMovingToSlowPeriodMs);
+	// 	_st_esos_uiF14Data.b_RPGNotMoving = TRUE;
+	// 	_st_esos_uiF14Data.b_RPGFast = FALSE;
+	// 	_st_esos_uiF14Data.b_RPGMedium = FALSE;
+	// 	_st_esos_uiF14Data.b_RPGSlow = FALSE;
+	// 	_st_esos_uiF14Data.b_RPGCW = FALSE;
+	// 	_st_esos_uiF14Data.b_RPGCCW = FALSE;
+	// }
 	
     ESOS_TASK_WAIT_TICKS( __ESOS_UIF14_UI_PERIOD_MS );
   }
