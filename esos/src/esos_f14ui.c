@@ -299,7 +299,7 @@ ESOS_USER_TASK(__esos_uiF14_task){
   ESOS_TASK_BEGIN();
   while(TRUE) {
 
-	  printf("run through\N");
+	//printf("run through\N");
 
 	//-------- LED Initial States
 	// LED1 (Red) 
