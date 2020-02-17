@@ -11,8 +11,7 @@
 #define ESOS_UIF14_H
 # include <all_generic.h>
 
-// STRUCTURES
-
+// this is the one data structure that is used throughout the UI
 typedef struct {
     BOOL b_SW1Pressed;
     BOOL b_SW1DoublePressed;
@@ -20,27 +19,26 @@ typedef struct {
     BOOL b_SW2DoublePressed;    
     BOOL b_SW3Pressed;
     BOOL b_SW3DoublePressed;
-	int16_t u16_doublePressUpperMs;  //upper time limit to be double pressed
+    int16_t u16_doublePressUpperMs;  //upper time limit to be double pressed
     
     BOOL b_RPGALast;  // compared to current RPGA, used to detect rotation
-	BOOL b_RPGFast;
+	BOOL b_RPGFast;  //RPG is moving in the fast range
 	BOOL b_RPGMedium;
-	BOOL b_RPGSlow;
+	BOOL b_RPGSlow; 
 	BOOL b_RPGNotMoving;
 	uint16_t u16_RPGLastChangeMs;  //time of last RPGA change
 	uint16_t u16_RPGPeriodMs;      // time SINCE last RPGA change
 	uint16_t u16_RPGNotMovingToSlowPeriodMs;  //border between not moving and slow
 	uint16_t u16_RPGSlowToMediumPeriodMs;     //border between slow and medium
 	uint16_t u16_RPGMediumToFastPeriodMs;	  //border between medium and fast
-	BOOL b_RPGCW;				//clockwise rotation
-    BOOL b_RPGCCW;				//counter clockwise
+	BOOL b_RPGCW;				//RPG clockwise rotation
+	BOOL b_RPGCCW;				//counter clockwise
 	int16_t i16_RPGCounter;      //notice signed int for counting CCW from start
-    int16_t i16_lastRPGCounter;  
-	BOOL b_RPGCWRev;		//T/F has RPG gone 1 full CW revolution?
+	int16_t i16_lastRPGCounter;  
+	BOOL b_RPGCWRev;		// has RPG gone 1 full CW revolution?
 	BOOL b_RPGCCWRev;
-	
-    BOOL b_LED1On;
-    uint16_t u16_LED1FlashPeriod; //period of one full one then off toggle
+	BOOL b_LED1On;
+	uint16_t u16_LED1FlashPeriod; //period of one full one then off toggle
 	BOOL b_LED1Flashing;
       
     BOOL b_LED2On;
@@ -51,13 +49,13 @@ typedef struct {
     uint16_t u16_LED3FlashPeriod;        
 	BOOL b_LED3Flashing;
     
-} _st_esos_uiF14Data_t;
+} _st_esos_uiF14Data_t;  //the name of this data structure; it is instantiated in f14ui.c
 
 // DEFINEs and CONSTANTs
 #define __ESOS_TICKS_TO_MS(x)           (x/1)
 #define __ESOS_MS_TO_TICKS(x)           (x*1)
 #define __ESOS_UIF14_UI_PERIOD_MS       10
-#define __RPGCountsPerRev               12
+#define __RPGCountsPerRev               12   //hardware characteristic of the RPG; used to determine one rotation
 
 // PRIVATE FUNCTION PROTOTYPES
 
