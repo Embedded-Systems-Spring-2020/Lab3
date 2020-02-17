@@ -147,7 +147,7 @@ void config_esos_uiF14();
                             ESOS_TASK_WAIT_UNTIL_UIF14_SW3_RELEASED(); \
                           } while (0);
 #define ESOS_TASK_WAIT_UNTIL_UIF14_SW3_DOUBLE_PRESSED()       ESOS_TASK_WAIT_UNTIL( esos_uiF14_isSW3DoublePressed() )
-
+/*
 #define ESOS_TASK_WAIT_UNTIL_UIF14_RPG_UNTIL_TURNS()          ESOS_TASK_WAIT_UNTIL( esos_uiF14_isRPGTurning() )
 #define ESOS_TASK_WAIT_UNTIL_UIF14_RPG_UNTIL_TURNS_CW()       ESOS_TASK_WAIT_UNTIL( esos_uiF14_isRPGTurningCW() )
 #define ESOS_TASK_WAIT_UNTIL_UIF14_RPG_UNTIL_TURNS_CCW()      ESOS_TASK_WAIT_UNTIL( esos_uiF14_isRPGTurningCCW() )
@@ -176,5 +176,5 @@ void config_esos_uiF14();
 							}                                                       \
 						  } while (0);                                              
 
-
+*/
 #endif    // ESOS_UIF14_H

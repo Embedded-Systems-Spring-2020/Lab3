@@ -17,9 +17,8 @@ char buffer[8];
 ESOS_USER_TASK(drawDisplay) {
     ESOS_TASK_BEGIN();
 		while(1){
-
 			ESOS_TASK_WAIT_ON_AVAILABLE_OUT_COMM();
-			if (esos_uiF14_isSW1Pressed()){ESOS_TASK_WAIT_ON_SEND_STRING("\nSw1 is Pushed  ");}
+			/*if (esos_uiF14_isSW1Pressed()){ESOS_TASK_WAIT_ON_SEND_STRING("\nSw1 is Pushed  ");}
 			if (esos_uiF14_isSW1Released()){ESOS_TASK_WAIT_ON_SEND_STRING("Sw1 is Released");}
 			if (esos_uiF14_isSW1DoublePressed()){ESOS_TASK_WAIT_ON_SEND_STRING("Sw1 is Double Pressed\n");
 			} else {ESOS_TASK_WAIT_ON_SEND_STRING("Sw1 is NOT Double Pressed\n");}
@@ -31,7 +30,7 @@ ESOS_USER_TASK(drawDisplay) {
 			if (esos_uiF14_isSW3Released()){ESOS_TASK_WAIT_ON_SEND_STRING("Sw3 is Released");}
 			if (esos_uiF14_isSW3DoublePressed()){ESOS_TASK_WAIT_ON_SEND_STRING("Sw3 is Double Pressed\n\n");
 			} else {ESOS_TASK_WAIT_ON_SEND_STRING("Sw3 is NOT Double Pressed\n\n");}
-
+*/
 			if (esos_uiF14_isRPGTurning()) {
 				ESOS_TASK_WAIT_ON_SEND_STRING("RPG is Turning ");
 				if (esos_uiF14_isRPGTurningCW()) { 
@@ -64,7 +63,7 @@ ESOS_USER_TASK(demoLEDsAndSwitches) {
     	esos_uiF14_flashLED3(500);
 
 		// RPG controls LED2
-		if (esos_uiF14_isRPGTurning()){
+		if (!esos_uiF14_isRPGTurning()){
 			esos_uiF14_turnLED2Off();
 		}
 		if (esos_uiF14_isRPGTurningSlow()){
@@ -195,8 +194,8 @@ ESOS_USER_TASK(menu) {
 
 void user_init(void){
     config_esos_uiF14();
-    // esos_RegisterTask(menu);
+    esos_RegisterTask(menu);
 	esos_RegisterTask(demoLEDsAndSwitches);
-	// esos_RegisterTask(drawDisplay);
+	esos_RegisterTask(drawDisplay);
 
 }

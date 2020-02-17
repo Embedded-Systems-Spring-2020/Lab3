@@ -292,9 +292,9 @@ ESOS_USER_TASK(__esos_uiF14_task){
   static uint16_t SW3_debounce_counter = 0;
 
   // init to -1 to disable counters by default
-  static int SW1_doublepress_counter = -1;
-  static int SW2_doublepress_counter = -1;
-  static int SW3_doublepress_counter = -1;
+  static int SW1_doublepress_counter = 0;
+  static int SW2_doublepress_counter = 0;
+  static int SW3_doublepress_counter = 0;
 
   ESOS_TASK_BEGIN();
   while(TRUE) {
@@ -487,17 +487,24 @@ ESOS_USER_TASK(__esos_uiF14_task){
 		//determines time since last change, used for speed calc
 		_st_esos_uiF14Data.u16_RPGPeriodMs = (esos_GetSystemTick()) - 
 										 (_st_esos_uiF14Data.u16_RPGLastChangeMs); 
+		_st_esos_uiF14Data.u16_RPGLastChangeMs = _st_esos_uiF14Data.u16_RPGPeriodMs;
 		_st_esos_uiF14Data.b_RPGNotMoving = FALSE;
 		
 		// compare time since last RPGA change to slow/med/fast cutoffs
-		if (_st_esos_uiF14Data.u16_RPGPeriodMs >= _st_esos_uiF14Data.u16_RPGMediumToFastPeriodMs){
-			_st_esos_uiF14Data.b_RPGFast = TRUE;
-		}	
-		else if (_st_esos_uiF14Data.u16_RPGPeriodMs >= _st_esos_uiF14Data.u16_RPGSlowToMediumPeriodMs){
-		  _st_esos_uiF14Data.b_RPGMedium = TRUE;
+		if (_st_esos_uiF14Data.u16_RPGPeriodMs >= _st_esos_uiF14Data.u16_RPGSlowToMediumPeriodMs){
+		  _st_esos_uiF14Data.b_RPGSlow = TRUE;
+		  _st_esos_uiF14Data.b_RPGMedium = FALSE;
+		  _st_esos_uiF14Data.b_RPGFast = FALSE;
 		}
+		else if (_st_esos_uiF14Data.u16_RPGPeriodMs >=  _st_esos_uiF14Data.u16_RPGMediumToFastPeriodMs){
+		  _st_esos_uiF14Data.b_RPGSlow = FALSE;
+		  _st_esos_uiF14Data.b_RPGMedium = TRUE;
+		  _st_esos_uiF14Data.b_RPGFast = FALSE;
+		}	
 		else {
-			_st_esos_uiF14Data.b_RPGSlow = TRUE;
+		  _st_esos_uiF14Data.b_RPGSlow = FALSE;
+		  _st_esos_uiF14Data.b_RPGMedium = FALSE;
+		  _st_esos_uiF14Data.b_RPGFast = TRUE;
 		}
 		
 		//determine CW or CCW; remember RPGA just changed
@@ -532,12 +539,11 @@ ESOS_USER_TASK(__esos_uiF14_task){
 			  _st_esos_uiF14Data.b_RPGCCWRev = FALSE;
 		}
 	}
-	else {  //reset flags after short delay to show no RPG motion
-		ESOS_TASK_WAIT_TICKS(_st_esos_uiF14Data.u16_RPGNotMovingToSlowPeriodMs);
+	else if (esos_GetSystemTick() - _st_esos_uiF14Data.u16_RPGLastChangeMs > _st_esos_uiF14Data.u16_RPGNotMovingToSlowPeriodMs) {  //reset flags after short delay to show no RPG motion
 		_st_esos_uiF14Data.b_RPGNotMoving = TRUE;
-		_st_esos_uiF14Data.b_RPGFast = FALSE;
-		_st_esos_uiF14Data.b_RPGMedium = FALSE;
 		_st_esos_uiF14Data.b_RPGSlow = FALSE;
+		_st_esos_uiF14Data.b_RPGMedium = FALSE;
+		_st_esos_uiF14Data.b_RPGFast = FALSE;
 		_st_esos_uiF14Data.b_RPGCW = FALSE;
 		_st_esos_uiF14Data.b_RPGCCW = FALSE;
 	}
@@ -557,7 +563,7 @@ void config_esos_uiF14() {
     _st_esos_uiF14Data.b_SW2DoublePressed = FALSE;    
     _st_esos_uiF14Data.b_SW3Pressed = FALSE;
     _st_esos_uiF14Data.b_SW3DoublePressed = FALSE;
-	_st_esos_uiF14Data.u16_doublePressUpperMs = 250;
+	_st_esos_uiF14Data.u16_doublePressUpperMs = 350;
     
     _st_esos_uiF14Data.b_RPGALast = FALSE;  // compared to current RPGA, used to detect rotation
 	_st_esos_uiF14Data.b_RPGFast = FALSE;
@@ -566,8 +572,8 @@ void config_esos_uiF14() {
 	_st_esos_uiF14Data.b_RPGNotMoving = TRUE;
 	_st_esos_uiF14Data.u16_RPGLastChangeMs = 0;  //time of last RPGA change
 	_st_esos_uiF14Data.u16_RPGPeriodMs = 0;      // time SINCE last RPGA change
-	_st_esos_uiF14Data.u16_RPGNotMovingToSlowPeriodMs = 300;  //border between not moving and slow
-	_st_esos_uiF14Data.u16_RPGSlowToMediumPeriodMs = 200;
+	_st_esos_uiF14Data.u16_RPGNotMovingToSlowPeriodMs = 600;  //border between not moving and slow
+	_st_esos_uiF14Data.u16_RPGSlowToMediumPeriodMs = 400;
 	_st_esos_uiF14Data.u16_RPGMediumToFastPeriodMs = 100;
 	_st_esos_uiF14Data.b_RPGCW = FALSE;
     _st_esos_uiF14Data.b_RPGCCW = FALSE;
