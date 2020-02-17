@@ -323,7 +323,7 @@ ESOS_USER_TASK(__esos_uiF14_task){
 		LED3_counter = 0;
 	}
 
-	if (SW1_is_debouncing && SW1_debounce_counter < ) {
+	if (SW1_is_debouncing && SW1_debounce_counter < _st_esos_uiF14Data.u16_doublePressUpperMs) {
 		SW1_debounce_counter += __ESOS_UIF14_UI_PERIOD_MS;
 	}
 
