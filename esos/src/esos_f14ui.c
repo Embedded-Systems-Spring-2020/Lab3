@@ -13,7 +13,7 @@
 #include <stdio.h>
 
 #define MINIMUM_LED_FLASH_PERIOD 100
-#define DEBOUNCE_PERIOD 30
+#define DEBOUNCE_PERIOD 15
 
 _st_esos_uiF14Data_t _st_esos_uiF14Data;
 
@@ -268,7 +268,16 @@ ESOS_USER_TASK(__esos_uiF14_task){
   static uint16_t LED3_counter = 0;
 
   static BOOL SW1_is_debouncing = 0;
+  static BOOL SW1_can_doublepress = FALSE;
   static uint16_t SW1_debounce_counter = 0;
+
+  static BOOL SW2_is_debouncing = 0;
+  static BOOL SW2_can_doublepress = FALSE;
+  static uint16_t SW2_debounce_counter = 0;
+
+  static BOOL SW3_is_debouncing = 0;
+  static BOOL SW3_can_doublepress = FALSE;
+  static uint16_t SW3_debounce_counter = 0;
 
   // init to -1 to disable counters by default
   static int SW1_doublepress_counter = -1;
@@ -323,68 +332,193 @@ ESOS_USER_TASK(__esos_uiF14_task){
 		LED3_counter = 0;
 	}
 
-	if (SW1_is_debouncing && SW1_debounce_counter < ) {
-		SW1_debounce_counter += __ESOS_UIF14_UI_PERIOD_MS;
+	//SW1
+	if (SW1_is_debouncing) {
+		if (SW1_debounce_counter < DEBOUNCE_PERIOD) {
+			SW1_debounce_counter += __ESOS_UIF14_UI_PERIOD_MS;
+		} else if(SW1_debounce_counter >= DEBOUNCE_PERIOD) {
+			SW1_debounce_counter = 0;
+			_st_esos_uiF14Data.b_SW1Pressed = SW1_PRESSED;
+			SW1_is_debouncing = FALSE;
+
+			if (_st_esos_uiF14Data.b_SW1DoublePressed && SW1_PRESSED) {
+				_st_esos_uiF14Data.b_SW1DoublePressed = FALSE;
+			}
+		}
 	}
 
-	if (SW1_PRESSED != esos_uiF14_isSW1Pressed() && !SW1_is_debouncing) {
-		SW1_is_debouncing = TRUE;
+	if (SW1_can_doublepress) {
+		if (SW1_doublepress_counter < _st_esos_uiF14Data.u16_doublePressUpperMs) {
+			SW1_doublepress_counter += __ESOS_UIF14_UI_PERIOD_MS;
+		} else {
+			SW1_doublepress_counter = 0;
+			SW1_can_doublepress = FALSE;
+		}
 	}
 
+	//On a button state change event
+	if (SW1_PRESSED != esos_uiF14_isSW1Pressed()) {
 
-	/* SWITCH STATE LOGIC */
-	if (SW1_PRESSED || SW1_doublepress_counter >= _st_esos_uiF14Data.u16_doublePressUpperMs) {
-		if (SW1_doublepress_counter >= _st_esos_uiF14Data.u16_doublePressUpperMs) {						
-			SW1_doublepress_counter = -1;		// Counter expired, no double press event, disable counter
-			_st_esos_uiF14Data.b_SW1DoublePressed = FALSE;
-			_st_esos_uiF14Data.b_SW1Pressed = TRUE;
-		// Switch was pressed while counter was running and not expired
-		} else if (SW1_doublepress_counter < _st_esos_uiF14Data.u16_doublePressUpperMs && SW1_doublepress_counter != -1) {
-			_st_esos_uiF14Data.b_SW1DoublePressed = TRUE;
+		//If the switch is pressed, start the debounce timer
+		if (SW1_PRESSED) {
+			if (!SW1_is_debouncing) {
+				SW1_is_debouncing = TRUE;
+			} else if (SW1_can_doublepress) {
+				_st_esos_uiF14Data.b_SW1DoublePressed = TRUE;
+				SW1_can_doublepress = FALSE;
+				printf("\nDoublepressed\n");
+			}			
+
+			//Doublepresses are only possible when the switch is released
+		} else if (SW1_RELEASED && !SW1_is_debouncing) {
 			_st_esos_uiF14Data.b_SW1Pressed = FALSE;
-
-			printf("\nSwitch 1 double pressed\n");
-
-		// Otherwise, the switch was pressed, start the timer
-		} else {
-			SW1_doublepress_counter = 0;		// Start the timer
+			SW1_can_doublepress = TRUE;
 		}
 	}
 
-	if (SW2_PRESSED || SW2_doublepress_counter >= _st_esos_uiF14Data.u16_doublePressUpperMs) {
-		if (SW2_doublepress_counter >= _st_esos_uiF14Data.u16_doublePressUpperMs) {						
-			SW2_doublepress_counter = -1;		// Counter expired, no double press event, disable counter
-			_st_esos_uiF14Data.b_SW2DoublePressed = FALSE;
-			_st_esos_uiF14Data.b_SW2Pressed = TRUE;
-		// Switch was pressed while counter was running and not expired
-		} else if (SW2_doublepress_counter < _st_esos_uiF14Data.u16_doublePressUpperMs && SW2_doublepress_counter != -1) {
-			_st_esos_uiF14Data.b_SW2DoublePressed = TRUE;
+	//SW2
+	if (SW2_is_debouncing) {
+		if (SW2_debounce_counter < DEBOUNCE_PERIOD) {
+			SW2_debounce_counter += __ESOS_UIF14_UI_PERIOD_MS;
+		} else if(SW2_debounce_counter >= DEBOUNCE_PERIOD) {
+			SW2_debounce_counter = 0;
+			_st_esos_uiF14Data.b_SW2Pressed = SW2_PRESSED;
+			SW2_is_debouncing = FALSE;
+
+			if (_st_esos_uiF14Data.b_SW2DoublePressed && SW2_PRESSED) {
+				_st_esos_uiF14Data.b_SW2DoublePressed = FALSE;
+			}
+		}
+	}
+
+	if (SW2_can_doublepress) {
+		if (SW2_doublepress_counter < _st_esos_uiF14Data.u16_doublePressUpperMs) {
+			SW2_doublepress_counter += __ESOS_UIF14_UI_PERIOD_MS;
+		} else {
+			SW2_doublepress_counter = 0;
+			SW2_can_doublepress = FALSE;
+		}
+	}
+
+	//On a button state change event
+	if (SW2_PRESSED != esos_uiF14_isSW2Pressed()) {
+
+		//If the switch is pressed, start the debounce timer
+		if (SW2_PRESSED) {
+			if (!SW2_is_debouncing) {
+				SW2_is_debouncing = TRUE;
+			} else if (SW2_can_doublepress) {
+				_st_esos_uiF14Data.b_SW2DoublePressed = TRUE;
+				SW2_can_doublepress = FALSE;
+				printf("\nDoublepressed\n");
+			}			
+
+			//Doublepresses are only possible when the switch is released
+		} else if (SW2_RELEASED && !SW2_is_debouncing) {
 			_st_esos_uiF14Data.b_SW2Pressed = FALSE;
-		// Otherwise, the switch was pressed, start the timer
-		} else {
-			SW2_doublepress_counter = 0;		// Start the timer
+			SW2_can_doublepress = TRUE;
 		}
 	}
 
-	if (SW3_PRESSED || SW3_doublepress_counter >= _st_esos_uiF14Data.u16_doublePressUpperMs) {
-		if (SW3_doublepress_counter >= _st_esos_uiF14Data.u16_doublePressUpperMs) {						
-			SW3_doublepress_counter = -1;		// Counter expired, no double press event, disable counter
-			_st_esos_uiF14Data.b_SW3DoublePressed = FALSE;
-			_st_esos_uiF14Data.b_SW3Pressed = TRUE;
-		// Switch was pressed while counter was running and not expired
-		} else if (SW3_doublepress_counter < _st_esos_uiF14Data.u16_doublePressUpperMs && SW3_doublepress_counter != -1) {
-			_st_esos_uiF14Data.b_SW3DoublePressed = TRUE;
+	//SW3
+	if (SW3_is_debouncing) {
+		if (SW3_debounce_counter < DEBOUNCE_PERIOD) {
+			SW3_debounce_counter += __ESOS_UIF14_UI_PERIOD_MS;
+		} else if(SW3_debounce_counter >= DEBOUNCE_PERIOD) {
+			SW3_debounce_counter = 0;
+			_st_esos_uiF14Data.b_SW3Pressed = SW3_PRESSED;
+			SW3_is_debouncing = FALSE;
+
+			if (_st_esos_uiF14Data.b_SW3DoublePressed && SW3_PRESSED) {
+				_st_esos_uiF14Data.b_SW3DoublePressed = FALSE;
+			}
+		}
+	}
+
+	if (SW3_can_doublepress) {
+		if (SW3_doublepress_counter < _st_esos_uiF14Data.u16_doublePressUpperMs) {
+			SW3_doublepress_counter += __ESOS_UIF14_UI_PERIOD_MS;
+		} else {
+			SW3_doublepress_counter = 0;
+			SW3_can_doublepress = FALSE;
+		}
+	}
+
+	//On a button state change event
+	if (SW3_PRESSED != esos_uiF14_isSW3Pressed()) {
+
+		//If the switch is pressed, start the debounce timer
+		if (SW3_PRESSED) {
+			if (!SW3_is_debouncing) {
+				SW3_is_debouncing = TRUE;
+			} else if (SW3_can_doublepress) {
+				_st_esos_uiF14Data.b_SW3DoublePressed = TRUE;
+				SW3_can_doublepress = FALSE;
+				printf("\nDoublepressed\n");
+			}			
+
+			//Doublepresses are only possible when the switch is released
+		} else if (SW3_RELEASED && !SW3_is_debouncing) {
 			_st_esos_uiF14Data.b_SW3Pressed = FALSE;
-		// Otherwise, the switch was pressed, start the timer
-		} else {
-			SW3_doublepress_counter = 0;		// Start the timer
+			SW3_can_doublepress = TRUE;
 		}
 	}
 
-	/* SWITCH COUNTER LOGIC */
-	if (SW1_doublepress_counter != -1) {SW1_doublepress_counter++;}
-	if (SW2_doublepress_counter != -1) {SW2_doublepress_counter++;}
-	if (SW3_doublepress_counter != -1) {SW3_doublepress_counter++;}
+	
+
+	// /* SWITCH STATE LOGIC */
+	// if (SW1_PRESSED || SW1_doublepress_counter >= _st_esos_uiF14Data.u16_doublePressUpperMs) {
+	// 	if (SW1_doublepress_counter >= _st_esos_uiF14Data.u16_doublePressUpperMs) {						
+	// 		SW1_doublepress_counter = -1;		// Counter expired, no double press event, disable counter
+	// 		_st_esos_uiF14Data.b_SW1DoublePressed = FALSE;
+	// 		_st_esos_uiF14Data.b_SW1Pressed = TRUE;
+	// 	// Switch was pressed while counter was running and not expired
+	// 	} else if (SW1_doublepress_counter < _st_esos_uiF14Data.u16_doublePressUpperMs && SW1_doublepress_counter != -1) {
+	// 		_st_esos_uiF14Data.b_SW1DoublePressed = TRUE;
+	// 		_st_esos_uiF14Data.b_SW1Pressed = FALSE;
+
+	// 		printf("\nSwitch 1 double pressed\n");
+
+	// 	// Otherwise, the switch was pressed, start the timer
+	// 	} else {
+	// 		SW1_doublepress_counter = 0;		// Start the timer
+	// 	}
+	// }
+
+	// if (SW2_PRESSED || SW2_doublepress_counter >= _st_esos_uiF14Data.u16_doublePressUpperMs) {
+	// 	if (SW2_doublepress_counter >= _st_esos_uiF14Data.u16_doublePressUpperMs) {						
+	// 		SW2_doublepress_counter = -1;		// Counter expired, no double press event, disable counter
+	// 		_st_esos_uiF14Data.b_SW2DoublePressed = FALSE;
+	// 		_st_esos_uiF14Data.b_SW2Pressed = TRUE;
+	// 	// Switch was pressed while counter was running and not expired
+	// 	} else if (SW2_doublepress_counter < _st_esos_uiF14Data.u16_doublePressUpperMs && SW2_doublepress_counter != -1) {
+	// 		_st_esos_uiF14Data.b_SW2DoublePressed = TRUE;
+	// 		_st_esos_uiF14Data.b_SW2Pressed = FALSE;
+	// 	// Otherwise, the switch was pressed, start the timer
+	// 	} else {
+	// 		SW2_doublepress_counter = 0;		// Start the timer
+	// 	}
+	// }
+
+	// if (SW3_PRESSED || SW3_doublepress_counter >= _st_esos_uiF14Data.u16_doublePressUpperMs) {
+	// 	if (SW3_doublepress_counter >= _st_esos_uiF14Data.u16_doublePressUpperMs) {						
+	// 		SW3_doublepress_counter = -1;		// Counter expired, no double press event, disable counter
+	// 		_st_esos_uiF14Data.b_SW3DoublePressed = FALSE;
+	// 		_st_esos_uiF14Data.b_SW3Pressed = TRUE;
+	// 	// Switch was pressed while counter was running and not expired
+	// 	} else if (SW3_doublepress_counter < _st_esos_uiF14Data.u16_doublePressUpperMs && SW3_doublepress_counter != -1) {
+	// 		_st_esos_uiF14Data.b_SW3DoublePressed = TRUE;
+	// 		_st_esos_uiF14Data.b_SW3Pressed = FALSE;
+	// 	// Otherwise, the switch was pressed, start the timer
+	// 	} else {
+	// 		SW3_doublepress_counter = 0;		// Start the timer
+	// 	}
+	// }
+
+	// /* SWITCH COUNTER LOGIC */
+	// if (SW1_doublepress_counter != -1) {SW1_doublepress_counter++;}
+	// if (SW2_doublepress_counter != -1) {SW2_doublepress_counter++;}
+	// if (SW3_doublepress_counter != -1) {SW3_doublepress_counter++;}
 	
 	// //+++++++++++++++RPG++++++++++++++++++++
 	// //determines if RPG is moving

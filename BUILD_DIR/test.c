@@ -225,9 +225,9 @@ ESOS_USER_TASK(menu) {
 
         ESOS_TASK_WAIT_ON_AVAILABLE_OUT_COMM();
         ESOS_TASK_WAIT_ON_SEND_STRING("Pick switch double press limit \n");
-        ESOS_TASK_WAIT_ON_SEND_STRING("1 -> 500 ms \n");
-        ESOS_TASK_WAIT_ON_SEND_STRING("2 -> 1000 ms \n");
-        ESOS_TASK_WAIT_ON_SEND_STRING("3 -> 3000 ms \n");
+        ESOS_TASK_WAIT_ON_SEND_STRING("1 -> 250 ms \n");
+        ESOS_TASK_WAIT_ON_SEND_STRING("2 -> 500 ms \n");
+        ESOS_TASK_WAIT_ON_SEND_STRING("3 -> 1000 ms \n");
         ESOS_TASK_WAIT_ON_SEND_STRING("9 -> Configure RPG \n");
         ESOS_TASK_WAIT_ON_SEND_STRING("Choice:  ");
         ESOS_TASK_SIGNAL_AVAILABLE_OUT_COMM();
@@ -243,11 +243,11 @@ ESOS_USER_TASK(menu) {
         if (buffer[0] == '1') {
             //We're not required to have functions which modify the
             //double press bound, so just set the value direcyly
-            esos_uiF14_setDoublePressPeriod(500);
+            esos_uiF14_setDoublePressPeriod(250);
         } else if (buffer[0] == '2') {
-            esos_uiF14_setDoublePressPeriod(1000);
+            esos_uiF14_setDoublePressPeriod(500);
         } else if (buffer[0] == '3') {
-            esos_uiF14_setDoublePressPeriod(3000);
+            esos_uiF14_setDoublePressPeriod(1000);
         } else if (buffer[0] == '9') {
             goto switchconfig;
         }
