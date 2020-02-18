@@ -261,6 +261,18 @@ inline void esos_uiF14_setDoublePressPeriod(uint16_t limit) {
 	return;
 }
 
+inline void esos_uiF14_setRPGNotMovingToSlowPeriodMs(uint16_t time) {
+	_st_esos_uiF14Data.u16_RPGNotMovingToSlowPeriodMs = time;
+}
+
+inline void esos_uiF14_setRPGSlowToMediumPeriodMs(uint16_t time) {
+	_st_esos_uiF14Data.u16_RPGSlowToMediumPeriodMs = time;
+}
+
+inline void esos_uiF14_setRPGMediumToFastPeriodMs(uint16_t time) {
+	_st_esos_uiF14Data.u16_RPGMediumToFastPeriodMs = time;
+}
+
 // UIF14 task to manage user-interface
 ESOS_USER_TASK(__esos_uiF14_task){
   static uint16_t LED1_counter = 0;
@@ -286,6 +298,8 @@ ESOS_USER_TASK(__esos_uiF14_task){
 
   ESOS_TASK_BEGIN();
   while(TRUE) {
+
+	  printf("run through\N");
 
 	//-------- LED Initial States
 	// LED1 (Red) 
