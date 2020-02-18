@@ -118,41 +118,10 @@ ESOS_USER_TASK(menu) {
     ESOS_TASK_BEGIN();
 
     for (;;) {
-        ledflashing:
-
-        ESOS_TASK_WAIT_ON_AVAILABLE_OUT_COMM();
-        ESOS_TASK_WAIT_ON_SEND_STRING("Pick LED 2 flash period \n");
-        ESOS_TASK_WAIT_ON_SEND_STRING("1 -> 500 ms \n");
-        ESOS_TASK_WAIT_ON_SEND_STRING("2 -> 1000 ms \n");
-        ESOS_TASK_WAIT_ON_SEND_STRING("3 -> 3000 ms \n");
-        ESOS_TASK_WAIT_ON_SEND_STRING("9 -> Configure switches \n");
-        ESOS_TASK_WAIT_ON_SEND_STRING("Choice:  ");
-        ESOS_TASK_SIGNAL_AVAILABLE_OUT_COMM();
-
-        ESOS_TASK_WAIT_ON_AVAILABLE_IN_COMM();
-        ESOS_TASK_WAIT_ON_GET_STRING(buffer);
-        ESOS_TASK_SIGNAL_AVAILABLE_IN_COMM();
-
-        ESOS_TASK_WAIT_ON_AVAILABLE_OUT_COMM();
-        ESOS_TASK_WAIT_ON_SEND_STRING(buffer);
-        ESOS_TASK_SIGNAL_AVAILABLE_OUT_COMM();
-
-        if (buffer[0] == '1') {
-            esos_uiF14_flashLED2(500);
-        } else if (buffer[0] == '2') {
-            esos_uiF14_flashLED2(1000);
-        } else if (buffer[0] == '3') {
-            esos_uiF14_flashLED2(3000);
-        } else if (buffer[0] == '9') {
-            goto switchconfig;
-        }
-
-        goto ledflashing;
-
         switchconfig: 
 
         ESOS_TASK_WAIT_ON_AVAILABLE_OUT_COMM();
-        ESOS_TASK_WAIT_ON_SEND_STRING("Pick switch double press limit \n");
+        ESOS_TASK_WAIT_ON_SEND_STRING("\n\nPick switch double press limit \n");
         ESOS_TASK_WAIT_ON_SEND_STRING("1 -> 250 ms \n");
         ESOS_TASK_WAIT_ON_SEND_STRING("2 -> 400 ms \n");
         ESOS_TASK_WAIT_ON_SEND_STRING("3 -> 600 ms \n");
@@ -169,20 +138,56 @@ ESOS_USER_TASK(menu) {
         ESOS_TASK_SIGNAL_AVAILABLE_OUT_COMM();
 
         if (buffer[0] == '1') {
-            //We're not required to have functions which modify the
-            //double press bound, so just set the value directly
             esos_uiF14_setDoublePressPeriod(250);
         } else if (buffer[0] == '2') {
             esos_uiF14_setDoublePressPeriod(400);
         } else if (buffer[0] == '3') {
             esos_uiF14_setDoublePressPeriod(600);
         } else if (buffer[0] == '9') {
-            goto switchconfig;
+            goto rpgconfig;
         }
 
         goto switchconfig;
 
-        // rpgconfig:
+        rpgconfig:
+
+		ESOS_TASK_WAIT_ON_AVAILABLE_OUT_COMM();
+        ESOS_TASK_WAIT_ON_SEND_STRING("\n\nPick RPG timings \n");
+        ESOS_TASK_WAIT_ON_SEND_STRING("1 -> Slow: 300 \n");
+        ESOS_TASK_WAIT_ON_SEND_STRING("2 -> SLow: 250 ms \n");
+        ESOS_TASK_WAIT_ON_SEND_STRING("3 -> Medium: 200 ms \n");
+		ESOS_TASK_WAIT_ON_SEND_STRING("4 -> Medium: 150 ms \n");
+		ESOS_TASK_WAIT_ON_SEND_STRING("5 -> Fast: 100 ms \n");
+		ESOS_TASK_WAIT_ON_SEND_STRING("6 -> Fast: 75 ms \n");
+        ESOS_TASK_WAIT_ON_SEND_STRING("9 -> Configure Switch \n");
+        ESOS_TASK_WAIT_ON_SEND_STRING("Choice:  ");
+        ESOS_TASK_SIGNAL_AVAILABLE_OUT_COMM();
+
+        ESOS_TASK_WAIT_ON_AVAILABLE_IN_COMM();
+        ESOS_TASK_WAIT_ON_GET_STRING(buffer);
+        ESOS_TASK_SIGNAL_AVAILABLE_IN_COMM();
+
+        ESOS_TASK_WAIT_ON_AVAILABLE_OUT_COMM();
+        ESOS_TASK_WAIT_ON_SEND_STRING(buffer);
+        ESOS_TASK_SIGNAL_AVAILABLE_OUT_COMM();
+
+		switch(buffer[0]) {
+			case '1': esos_uiF14_setRPGNotMovingToSlowPeriodMs(300);
+					  break;
+			case '2': esos_uiF14_setRPGNotMovingToSlowPeriodMs(250);
+					  break;
+			case '3': esos_uiF14_setRPGSlowToMediumPeriodMs(200);
+					  break;
+			case '4': esos_uiF14_setRPGSlowToMediumPeriodMs(150);
+					  break;
+			case '5': esos_uiF14_setRPGMediumToFastPeriodMs(100);
+					  break;
+			case '6': esos_uiF14_setRPGMediumToFastPeriodMs(75);
+					  break;
+			case '9': goto switchconfig;
+		}
+
+		goto rpgconfig;
 
     }
     ESOS_TASK_END();
@@ -192,6 +197,6 @@ void user_init(void){
     config_esos_uiF14();
     // esos_RegisterTask(menu);
 	esos_RegisterTask(demoLEDsAndSwitches);
-	esos_RegisterTask(drawDisplay);
+	// esos_RegisterTask(drawDisplay);
 
 }

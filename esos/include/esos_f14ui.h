@@ -72,6 +72,10 @@ inline uint16_t _esos_uiF14_getRPGPeriod (void);
 
 inline void esos_uiF14_setDoublePressPeriod(uint16_t);
 
+inline void esos_uiF14_setRPGNotMovingToSlowPeriodMs(uint16_t);
+inline void esos_uiF14_setRPGSlowToMediumPeriodMs(uint16_t);
+inline void esos_uiF14_setRPGMediumToFastPeriodMs(uint16_t);
+
 inline BOOL esos_uiF14_isSW1Pressed (void);
 inline BOOL esos_uiF14_isSW1Released (void);
 inline BOOL esos_uiF14_isSW1DoublePressed (void);
