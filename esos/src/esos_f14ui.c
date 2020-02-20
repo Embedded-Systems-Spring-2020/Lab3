@@ -483,30 +483,7 @@ ESOS_USER_TASK(__esos_uiF14_task){
 	//determines if RPG is moving
 	if (RPGA != _st_esos_uiF14Data.b_RPGALast){ 
 		_st_esos_uiF14Data.b_RPGALast = RPGA;
-
-		//determines time since last change, used for speed calc
-		_st_esos_uiF14Data.u16_RPGPeriodMs = (esos_GetSystemTick()) - 
-										 (_st_esos_uiF14Data.u16_RPGLastChangeMs); 
-		_st_esos_uiF14Data.u16_RPGLastChangeMs = esos_GetSystemTick();
-		_st_esos_uiF14Data.b_RPGNotMoving = FALSE;
-		
-		// compare time since last RPGA change to slow/med/fast cutoffs
-		if (_st_esos_uiF14Data.u16_RPGPeriodMs >= _st_esos_uiF14Data.u16_RPGSlowToMediumPeriodMs){
-		  _st_esos_uiF14Data.b_RPGSlow = TRUE;
-		  _st_esos_uiF14Data.b_RPGMedium = FALSE;
-		  _st_esos_uiF14Data.b_RPGFast = FALSE;
-		}
-		else if (_st_esos_uiF14Data.u16_RPGPeriodMs >=  _st_esos_uiF14Data.u16_RPGMediumToFastPeriodMs){
-		  _st_esos_uiF14Data.b_RPGSlow = FALSE;
-		  _st_esos_uiF14Data.b_RPGMedium = TRUE;
-		  _st_esos_uiF14Data.b_RPGFast = FALSE;
-		}	
-		else {
-		  _st_esos_uiF14Data.b_RPGSlow = FALSE;
-		  _st_esos_uiF14Data.b_RPGMedium = FALSE;
-		  _st_esos_uiF14Data.b_RPGFast = TRUE;
-		}
-		
+	
 		//determine CW or CCW; remember RPGA just changed
 		if ((RPGA == 0 && RPGB == 1) || (RPGA == 1 && RPGB == 0)) {
 			_st_esos_uiF14Data.b_RPGCW = TRUE;
@@ -517,38 +494,17 @@ ESOS_USER_TASK(__esos_uiF14_task){
 			_st_esos_uiF14Data.b_RPGCCW = TRUE;
 		}
 		
-		//update the counter for later use in revolution calculations 
+		//update the counter 
 		if (_st_esos_uiF14Data.b_RPGCW){
 			_st_esos_uiF14Data.i16_RPGCounter +=1;
 		}
 		if (_st_esos_uiF14Data.b_RPGCCW){
 			_st_esos_uiF14Data.i16_RPGCounter -=1;
 		}
-		if (_st_esos_uiF14Data.i16_RPGCounter == _st_esos_uiF14Data.i16_lastRPGCounter +
-												__RPGCountsPerRev){
-			_st_esos_uiF14Data.b_RPGCWRev = TRUE;
-			_st_esos_uiF14Data.i16_lastRPGCounter = _st_esos_uiF14Data.i16_RPGCounter;
-		}
-		else if (_st_esos_uiF14Data.i16_RPGCounter == _st_esos_uiF14Data.i16_lastRPGCounter -
-												__RPGCountsPerRev){
-			_st_esos_uiF14Data.b_RPGCCWRev = TRUE;
-			_st_esos_uiF14Data.i16_lastRPGCounter = _st_esos_uiF14Data.i16_RPGCounter;
-		}
-		else {
-			  _st_esos_uiF14Data.b_RPGCWRev = FALSE;
-			  _st_esos_uiF14Data.b_RPGCCWRev = FALSE;
-		}
-	}
-	else if (esos_GetSystemTick() - _st_esos_uiF14Data.u16_RPGLastChangeMs > _st_esos_uiF14Data.u16_RPGNotMovingToSlowPeriodMs) {  //reset flags after short delay to show no RPG motion
-		_st_esos_uiF14Data.b_RPGNotMoving = TRUE;
-		_st_esos_uiF14Data.b_RPGSlow = FALSE;
-		_st_esos_uiF14Data.b_RPGMedium = FALSE;
-		_st_esos_uiF14Data.b_RPGFast = FALSE;
-		_st_esos_uiF14Data.b_RPGCW = FALSE;
-		_st_esos_uiF14Data.b_RPGCCW = FALSE;
+		
 	}
 	
-    ESOS_TASK_WAIT_TICKS( __ESOS_UIF14_UI_PERIOD_MS );
+	ESOS_TASK_WAIT_TICKS( __ESOS_UIF14_UI_PERIOD_MS );
   }
   ESOS_TASK_END();
 }
